@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:elevation="3dp"
+        android:background="@color/colorPrimaryLight"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="38dp">
+        <ImageView
+            android:padding="9dp"
+            android:src="@drawable/search"
+            android:layout_width="38dp"
+            android:layout_height="38dp" />
+        <EditText
+            android:textSize="16sp"
+            android:padding="4dp"
+            android:id="@+id/etSeek"
+            android:singleLine="true"
+            android:background="@null"
+            android:hint="搜索话题，问题，或人"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <ImageView
+        android:layout_marginRight="5dp"
+        android:padding="9dp"
+        android:src="@drawable/categories"
+        android:id="@+id/ivCategories"
+        android:layout_width="42dp"
+        android:layout_height="38dp" />
+</LinearLayout>
