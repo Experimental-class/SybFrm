@@ -12,7 +12,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:padding="10dp"
+                android:padding="11dp"
                 android:clickable="true"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/btnHome1"
@@ -25,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent">
             <ImageView
-                android:padding="10dp"
+                android:padding="11dp"
                 android:clickable="true"
                 android:id="@+id/btnHome2"
                 style="@style/Widget.AppCompat.Button.Borderless"
@@ -39,7 +39,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:padding="9dp"
+                android:padding="10dp"
                 android:clickable="true"
                 android:id="@+id/btnHome3"
                 style="@style/Widget.AppCompat.Button.Borderless"
@@ -52,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent">
             <ImageView
-                android:padding="10dp"
+                android:padding="11dp"
                 android:clickable="true"
                 android:id="@+id/btnHome4"
                 style="@style/Widget.AppCompat.Button.Borderless"

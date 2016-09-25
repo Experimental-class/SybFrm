@@ -86,8 +86,8 @@ public class AnimationView extends View {
     }
 
     private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
-
-        PULL_HEIGHT = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, context.getResources().getDisplayMetrics());
+//高度
+        PULL_HEIGHT = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 61, context.getResources().getDisplayMetrics());
         PULL_DELTA = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics());
         mWidthOffset = 0.5f;
         mBackPaint = new Paint();
@@ -128,7 +128,7 @@ public class AnimationView extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
-            mRadius = getHeight() / 6;
+            mRadius = getHeight()/6+4;
             mWidth = getWidth();
             mHeight = getHeight();
 

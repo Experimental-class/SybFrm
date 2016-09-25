@@ -67,7 +67,8 @@ public class CircleRefreshLayout extends FrameLayout {
         }
         setAttrs(attrs);
         mPullHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, context.getResources().getDisplayMetrics());
-        mHeaderHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, context.getResources().getDisplayMetrics());
+        //高度
+        mHeaderHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 61, context.getResources().getDisplayMetrics());
 
         this.post(new Runnable() {
             @Override

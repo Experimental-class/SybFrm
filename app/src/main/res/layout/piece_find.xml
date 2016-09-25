@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:gravity="center"
     android:layout_width="match_parent"
@@ -28,10 +29,13 @@
             android:layout_height="match_parent" />
     </LinearLayout>
     <ImageView
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:layout_marginRight="5dp"
         android:padding="9dp"
         android:src="@drawable/categories"
         android:id="@+id/ivCategories"
         android:layout_width="42dp"
-        android:layout_height="38dp" />
+        android:layout_height="38dp"
+        tools:targetApi="lollipop" />
 </LinearLayout>
