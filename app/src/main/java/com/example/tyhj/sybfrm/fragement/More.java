@@ -16,13 +16,15 @@ import android.view.ViewGroup;
 
 import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
 import com.example.tyhj.sybfrm.R;
+import com.example.tyhj.sybfrm.SetUserInfo;
+import com.example.tyhj.sybfrm.SetUserInfo_;
 import com.example.tyhj.sybfrm.YourInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class More extends Fragment {
-    FloatingActionButton fab;
+    FloatingActionButton fabSetInfo;
     View view;
 
     public More() {
@@ -38,14 +40,23 @@ public class More extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.fragment_more,null);
+
         initViews();
         return view;
     }
 
     void initViews() {
-        fab= (FloatingActionButton) view.findViewById(R.id.fab);
+        fabSetInfo= (FloatingActionButton) view.findViewById(R.id.fabSetInfo);
         CollapsingToolbarLayout toolbarLayout= (CollapsingToolbarLayout) view.findViewById(R.id.maincollapsing);
         //设置名字
-        toolbarLayout.setTitle("Title");
+        toolbarLayout.setTitle("Tyhj");
+
+        fabSetInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), SetUserInfo_.class));
+            }
+        });
+
     }
 }

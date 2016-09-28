@@ -50,7 +50,8 @@ public class Message extends Fragment {
         tabLayout= (TabLayout) view.findViewById(R.id.tabMsg);
 
         viewPager.setAdapter(new FragmentTableAdapter(getFragmentManager(),getActivity(),title,fragements));
-        viewPager.setCurrentItem(3);
+        viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(3);
 
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);

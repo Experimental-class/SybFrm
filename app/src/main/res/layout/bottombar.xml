@@ -12,7 +12,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:padding="11dp"
+                android:padding="12dp"
                 android:clickable="true"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/btnHome1"

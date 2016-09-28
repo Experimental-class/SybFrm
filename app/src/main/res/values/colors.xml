@@ -7,4 +7,8 @@
     <color name="gray">#cccccc</color>
     <color name="white_pressed">#f1f1f1</color>
     <color name="half_black">#808080</color>
+    <color name="bgwhite">#ffffff</color>
+    <color name="bggray">#efefef</color>
+    <color name="iccolor">#a1a1a1</color>
+    <color name="ichome">#a1a1a1</color>
 </resources>

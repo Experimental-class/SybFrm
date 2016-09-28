@@ -1,5 +1,6 @@
 package com.example.tyhj.sybfrm.fragement;
 
+import android.content.Intent;
 import android.os.*;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
+import com.example.tyhj.sybfrm.Allquestions;
+import com.example.tyhj.sybfrm.Allquestions_;
 import com.example.tyhj.sybfrm.R;
 
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import java.util.List;
 
 import custom.CircleRefreshLayout;
 import custom.OnVerticalScrollListener;
+import custom.ShowButton;
 
 public class Popular extends Fragment {
     private static final android.view.animation.Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
@@ -116,6 +120,13 @@ public class Popular extends Fragment {
         llseek= (LinearLayout) view.findViewById(R.id.llseek);
         app_bar= (AppBarLayout) view.findViewById(R.id.app_bar);
         crl_Refresh= (CircleRefreshLayout) view.findViewById(R.id.crl_Refresh);
+
+        ivCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), Allquestions_.class));
+            }
+        });
     }
 
 
@@ -134,9 +145,5 @@ public class Popular extends Fragment {
 
     public void setShowme(ShowButton showButton){
         this.showButton=showButton;
-    }
-
-    public interface ShowButton{
-        void showMe(boolean showWhat);
     }
 }

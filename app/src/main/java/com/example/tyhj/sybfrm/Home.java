@@ -22,9 +22,10 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import custom.MyViewPager;
+import custom.ShowButton;
 
 @EActivity(R.layout.activity_home)
-    public class Home extends AppCompatActivity implements Popular.ShowButton{
+    public class Home extends AppCompatActivity implements ShowButton {
     private int TAB_COUNT=4;
     Popular popular;
     Categories categories;
@@ -48,7 +49,7 @@ import custom.MyViewPager;
     void  afterview(){
         setInitColor();
         popular=new Popular();
-
+        categories=new Categories(Home.this);
         animation_up= AnimationUtils.loadAnimation(this,R.anim.bottombarup);
         animation_down= AnimationUtils.loadAnimation(this,R.anim.bottombardown);
         animation_down.setAnimationListener(new Animation.AnimationListener() {
@@ -77,7 +78,7 @@ import custom.MyViewPager;
                     case 0:
                         return popular;
                     case 1:
-                        return categories=new Categories();
+                        return categories;
                     case 2:
                         return message=new Message();
                     case 3:
