@@ -27,7 +27,17 @@
     </style>
 
     <style name="menu_labels_style">
-        <item name="android:background">#ffffff</item>
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:background">#aaaaaa</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="CollapsingTextAppearance" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+    <style name="CollapsingTextAppearance.Inverse" >
+        <item name="android:textSize">19sp</item>
+    </style>
+
+
+    <style name="ToolBarWithNavigationBack">
+        <item name="navigationIcon">@drawable/abc_ic_ab_back_mtrl_am_alpha</item>
     </style>
 </resources>

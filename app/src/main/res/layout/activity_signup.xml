@@ -3,41 +3,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.tyhj.sybfrm.initlogin.Signup">
+
     <LinearLayout
-        android:orientation="vertical"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:padding="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注册你的账号"
+            android:textSize="22dp" />
+        <TextView
+            android:layout_marginTop="17dp"
+            android:textSize="16sp"
+            android:text="@string/aboutregister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <EditText
-            android:singleLine="true"
-            android:inputType="textVisiblePassword"
-            android:hint="Name"
+            android:layout_marginTop="30dp"
+            android:textColorHint="@color/hint"
             android:id="@+id/etSignupName"
             android:layout_width="300dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:hint="用户名"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true" />
+
         <EditText
-            android:singleLine="true"
-            android:inputType="textEmailSubject"
+            android:textColorHint="@color/hint"
             android:id="@+id/etSignupId"
-            android:hint="Email"
             android:layout_width="300dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:hint="邮箱地址"
+            android:inputType="textEmailSubject"
+            android:singleLine="true" />
+
         <EditText
-            android:singleLine="true"
-            android:inputType="textPassword"
+            android:textColorHint="@color/hint"
             android:id="@+id/etSignupPassword"
-            android:hint="Password"
             android:layout_width="300dp"
-            android:layout_height="50dp" />
-        <Button
-            android:id="@+id/btnSignup"
-            android:text="Sign up"
-            android:layout_width="300dp"
-            android:layout_height="45dp" />
+            android:layout_height="50dp"
+            android:hint="你的密码"
+            android:inputType="textPassword"
+            android:singleLine="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:background="#2ca6cb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/bgwhite"
+                android:layout_weight="1"
+                android:id="@+id/btnSignup"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center_vertical|right"
+                android:textSize="17sp"
+                android:text="下一步" />
+
+            <ImageView
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_arrow_right" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

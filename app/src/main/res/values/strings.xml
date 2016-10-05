@@ -20,8 +20,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
      <string name="large_text">
-        "Material is the metaphor.\n\n"
-
+         比如我有a.xml，中间有控件TextView id为tv，有b.xml，中间有控件TextView id为tv，
+         在R文件中能看到id内部类中只有一个tv常量，调用时是因为用之前是用色图ContentView设置了对应的布局所以不会混乱嘛，
+         还是说就是会混乱的呢，我记得以前好像用的时候用混乱过，但是今天听老师讲课说是可行的，不会造成混乱，傻傻又分不清楚了，
+         求解答
+        "Material is the metaphor.\n"
         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
         "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
         "technologically advanced and open to imagination and magic.\n"
@@ -108,6 +111,9 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-   <string name="nointernet">网络连接已断开，请检查网络</string>
-   <string name="savaphotopath">/SybFrm</string>
+    <string name="nointernet">网络连接已断开，请检查网络</string>
+    <string name="savaphotopath">/SybFrm</string>
+    <string name="aboutemail">你可以使用注册邮箱或用户名进行登陆，如果还没有注册，可以进行注册或者直接点击下一步以游客的身份进行浏览</string>
+    <string name="aboutregister">你的邮箱或者用户名将作为你的登陆账号，邮箱需要进行验证，并且作为修改密码的凭证</string>
+    <string name="aboutchangepassword">你可以输入你的注册邮箱获取验证码，进行验证邮箱后可以重置你的密码，修改密码后请牢记自己的密码，不要将密码泄露给他人</string>
 </resources>

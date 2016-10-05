@@ -5,52 +5,91 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.tyhj.sybfrm.Login">
+
     <LinearLayout
-        android:gravity="center"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:padding="30dp">
+
         <TextView
-            android:textSize="22dp"
-            android:text="SybFrm"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登陆你的账号"
+            android:textSize="22dp" />
+        <TextView
+            android:layout_marginTop="17dp"
+            android:textSize="16sp"
+            android:text="@string/aboutemail"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
         <EditText
-            android:layout_marginTop="70dp"
+            android:textColorHint="@color/hint"
             android:id="@+id/etUserId"
-            android:hint="Name/Email"
-            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:hint="你的邮箱/用户名"
             android:inputType="number"
-            android:layout_width="200dp"
-            android:layout_height="50dp" />
+            android:singleLine="true" />
+
         <EditText
-            android:hint="Password"
-            android:singleLine="true"
-            android:inputType="textPassword"
+            android:textColorHint="@color/hint"
+            android:layout_marginTop="10dp"
             android:id="@+id/etUserPassword"
-            android:layout_width="200dp"
-            android:layout_height="50dp" />
-        <Button
-            android:text="LOGIN"
-            android:id="@+id/btnLogin"
-            android:layout_width="200dp"
-            android:layout_height="45dp" />
-        <LinearLayout
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="输入你的密码"
+            android:inputType="textPassword"
+            android:singleLine="true" />
+
             <TextView
-                android:text="sign up"
+                android:layout_marginTop="20dp"
                 android:id="@+id/tvRegister"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="还没有账号？点击注册账号" />
+
             <TextView
-                android:layout_marginLeft="30dp"
-                android:text="forgetPassword"
+                android:layout_marginTop="20dp"
                 android:id="@+id/tvForgetPassword"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:text="找回密码" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="#2ca6cb"
+        android:clickable="true"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:textColor="@color/bgwhite"
+            android:id="@+id/btnLogin"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_gravity="bottom"
+            android:gravity="right|center_vertical"
+            android:paddingRight="10dp"
+            android:text="下一步"
+            android:textSize="17sp" />
+        <ImageView
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp" />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -6,11 +6,11 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Outline;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -18,7 +18,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -27,13 +26,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.tyhj.sybfrm.savaInfo.MyInfo;
+import com.example.tyhj.sybfrm.info.UserInfo;
+import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 import com.squareup.picasso.Picasso;
 import com.tyhj.myfist_2016_6_29.MyTime;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
@@ -41,12 +43,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-import custom.MyFunction;
-
 @EActivity(R.layout.activity_set_user_info)
 public class SetUserInfo extends AppCompatActivity {
-
+    boolean ifMessageChange;
+    File headImagefile=null;
     Animation animation;
+    Uri imageUri;
+    public static final int TAKE_PHOTO = 1;
+    public static final int CROP_PHOTO = 2;
+    int WHERE_PHOTO = 0;
+    String date;
+    Button camoral, images;
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +61,11 @@ public class SetUserInfo extends AppCompatActivity {
         animation= AnimationUtils.loadAnimation(this,R.anim.bottombarup);
     }
 
-
     @ViewById
     LinearLayout ll_show_to_sava;
 
     @ViewById
-    Button btn_savaChangeInfo,btn_noSavaChangeInfo;
+    Button btn_savaChangeInfo;
 
     @ViewById
     ImageView iv_userHeadImage;
@@ -78,16 +84,55 @@ public class SetUserInfo extends AppCompatActivity {
         dialog();
     }
 
+    @Click(R.id.btn_savaChangeInfo)
+    void save(){
+        savaToCloud(headImagefile);
+    }
+
     @AfterViews
     void afterViews(){
         iv_userHeadImage.setClipToOutline(true);
-        iv_userHeadImage.setOutlineProvider(MyFunction.getOutline(true,10));
+        iv_userHeadImage.setOutlineProvider(MyFunction.getOutline(true,10,0));
         Picasso.with(this).load("http://ac-fgtnb2h8.clouddn.com/21d88c8102759c96ecdf.jpg").into(iv_userHeadImage);
-
+        initView();
         clik();
-
     }
 
+    @UiThread
+    void mToast(View view,String str){
+        Snackbar.make(view,str,Snackbar.LENGTH_INDEFINITE).show();
+    }
+
+    @UiThread
+    void finishActivity(){
+        this.finish();
+    }
+
+    @Background
+    void savaToCloud(File file){
+        /*
+        * 保存信息
+        *
+        *
+        */
+
+        mToast(tv_userName,"已保存");
+        finishActivity();
+    }
+
+    private void initView() {
+        UserInfo userInfo=MyFunction.getUserInfo();
+        if(userInfo!=null) {
+            tvId.setText(userInfo.getId());
+            tv_userName.setText(userInfo.getName());
+            et_name.setText(userInfo.getName());
+            et_Signature.setText(userInfo.getSignature());
+            tvEmail.setText(userInfo.getEmail());
+            tvReputation.setText(userInfo.getReputation());
+            et_blog.setText(userInfo.getBlog());
+            et_github.setText(userInfo.getGithub());
+        }
+    }
     private void clik() {
         animation.setAnimationListener(listener);
         et_name.addTextChangedListener(textWatcher);
@@ -95,7 +140,6 @@ public class SetUserInfo extends AppCompatActivity {
         et_blog.addTextChangedListener(textWatcher);
         et_github.addTextChangedListener(textWatcher);
     }
-
     TextWatcher textWatcher=new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -104,14 +148,12 @@ public class SetUserInfo extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if(cdvIfSave.getVisibility()!=View.VISIBLE){
-                cdvIfSave.startAnimation(animation);
-            }
+
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-
+            ifMessageChange=true;
         }
     };
     Animation.AnimationListener listener=new Animation.AnimationListener() {
@@ -130,13 +172,22 @@ public class SetUserInfo extends AppCompatActivity {
 
         }
     };
+    Animation.AnimationListener listener2=new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
 
-    Uri imageUri;
-    public static final int TAKE_PHOTO = 1;
-    public static final int CROP_PHOTO = 2;
-    int WHERE_PHOTO = 0;
-    String date;
-    Button camoral, images;
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            cdvIfSave.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    };
     // 上传用户头像
     private void dialog() {
         AlertDialog.Builder di;
@@ -204,14 +255,14 @@ public class SetUserInfo extends AppCompatActivity {
                     MyTime myTime=new MyTime();
                     date =myTime.getYear()+myTime.getMonth_()+myTime.getDays()+
                             myTime.getWeek_()+myTime.getHour()+myTime.getMinute()+
-                            myTime.getSecond()+ MyInfo.getUserInfo().getName()+".JPEG";
+                            myTime.getSecond()+ MyFunction.getUserInfo().getName()+".JPEG";
                     Bitmap bitmap= null;
                     try {
                         bitmap = BitmapFactory.decodeStream(SetUserInfo.this.getContentResolver().openInputStream(imageUri));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    MyInfo.saveBitmapFile(bitmap,date,SetUserInfo.this);
+                    MyFunction.saveBitmapFile(bitmap,date,SetUserInfo.this);
 
                     File file=new File(Environment.getExternalStorageDirectory()+"/SybFrm",date);
                     //换图片
@@ -228,16 +279,16 @@ public class SetUserInfo extends AppCompatActivity {
                         Picasso.with(SetUserInfo.this).load(imageUri).into(iv_userHeadImage);
                         String path=Environment.getExternalStorageDirectory()+"/SybFrm";
                         WHERE_PHOTO = 0;
-                        if(!MyInfo.isIntenet(SetUserInfo.this))
+                        if(!MyFunction.isIntenet(SetUserInfo.this))
                             return;
-                        final File file=new File(path,date);
-                        final String fileName=MyInfo.getUserInfo().getId()+".JPEG";
+                        headImagefile=new File(path,date);
+                        final String fileName= MyFunction.getUserInfo().getId()+".JPEG";
                         /*
                         *
                         * 保存图片
                         并且保存URL到数据库
                         */
-                        cdvIfSave.startAnimation(animation);
+                        ifMessageChange=true;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -246,5 +297,13 @@ public class SetUserInfo extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(ifMessageChange&&cdvIfSave.getVisibility()!=View.VISIBLE) {
+            cdvIfSave.startAnimation(animation);
+        }else
+            super.onBackPressed();
     }
 }

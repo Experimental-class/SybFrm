@@ -4,13 +4,12 @@ package com.example.tyhj.sybfrm.info;
  * Created by _Tyhj on 2016/8/3.
  */
 public class UserInfo {
-    String id,password,url, name, email, signature;
+    String id,url, name, email, signature,reputation,blog,github;
 
     @Override
     public String toString() {
         return "UserInfo{" +
                 "id='" + id + '\'' +
-                ", password='" + password + '\'' +
                 ", url='" + url + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
@@ -18,13 +17,15 @@ public class UserInfo {
                 '}';
     }
 
-    public UserInfo(String id, String password, String url, String name, String email, String signature) {
+    public UserInfo(String id, String url, String name, String email, String signature,String reputation,String blog,String github) {
         this.id = id;
-        this.password = password;
         this.url = url;
         this.name = name;
         this.email = email;
         this.signature = signature;
+        this.reputation=reputation;
+        this.blog=blog;
+        this.github=github;
     }
 
     public String getId() {
@@ -33,14 +34,6 @@ public class UserInfo {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getUrl() {
@@ -73,5 +66,29 @@ public class UserInfo {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(String reputation) {
+        this.reputation = reputation;
+    }
+
+    public String getBlog() {
+        return blog;
+    }
+
+    public void setBlog(String blog) {
+        this.blog = blog;
+    }
+
+    public String getGithub() {
+        return github;
+    }
+
+    public void setGithub(String github) {
+        this.github = github;
     }
 }

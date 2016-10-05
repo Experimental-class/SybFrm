@@ -11,4 +11,7 @@
     <color name="bggray">#efefef</color>
     <color name="iccolor">#a1a1a1</color>
     <color name="ichome">#a1a1a1</color>
+    <color name="purple">#88147f</color>
+    <color name="hint">#88147f</color>
+    <color name="title">#000000</color>
 </resources>

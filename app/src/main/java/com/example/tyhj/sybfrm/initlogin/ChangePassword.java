@@ -31,6 +31,6 @@ public class ChangePassword extends AppCompatActivity {
         /**
          * 将密码发送给服务器
          */
-        Snackbar.make(btGetNewPassword,"已将密码发送至邮箱",Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(btGetNewPassword,"修改成功",Snackbar.LENGTH_SHORT).show();
     }
 }

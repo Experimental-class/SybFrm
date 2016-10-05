@@ -6,6 +6,15 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
 
+
+    //为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
     defaultConfig {
         applicationId "com.example.tyhj.sybfrm"
         minSdkVersion 15
@@ -33,4 +42,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/picasso-2.5.2.jar')
     compile files('libs/Ysd-first-2016.6.29.jar')
+    compile 'com.zzhoujay.markdown:markdown:0.0.12'
+    compile 'com.zzhoujay.richtext:richtext:2.0.13'
+    // LeanCloud 基础包
+    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+
 }

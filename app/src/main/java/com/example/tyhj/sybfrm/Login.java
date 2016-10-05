@@ -13,7 +13,7 @@ import com.example.tyhj.sybfrm.info.UserInfo;
 
 import com.example.tyhj.sybfrm.initlogin.ChangePassword_;
 import com.example.tyhj.sybfrm.initlogin.Signup_;
-import com.example.tyhj.sybfrm.savaInfo.MyInfo;
+import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -26,6 +26,15 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(MyFunction.canLog(this)){
+            if(MyFunction.isIntenet(this)){
+                MyFunction.saveUserInfo(this);
+            }else {
+                MyFunction.getInitInformation(this);
+            }
+            startActivity(new Intent(this,Home_.class));
+            this.finish();
+        }
     }
 
     @ViewById
@@ -34,7 +43,6 @@ public class Login extends AppCompatActivity {
     Button btnLogin;
     @ViewById
     EditText etUserId,etUserPassword;
-
 
     //注册
     @Click(R.id.tvRegister)
@@ -55,23 +63,14 @@ public class Login extends AppCompatActivity {
         check(id,password);
     }
 
-
-
-
-
     //登陆验证
     @Background
     void check(String id,String password){
         /**
          * 后台验证,保存信息
          */
-        UserInfo userInfo=getUserInfo();
-        saveUserInfo(userInfo);
+        MyFunction.saveUserInfo(Login.this);
         finishActivity();
-    }
-    //未完。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。
-    private UserInfo getUserInfo() {
-        return new UserInfo("id","password","url","name","email","signature");
     }
 
     @UiThread
@@ -80,17 +79,5 @@ public class Login extends AppCompatActivity {
         this.finish();
     }
 
-    private void saveUserInfo(UserInfo userInfo) {
-        SharedPreferences sharedPreferences = this.getSharedPreferences("saveLogin", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
-        editor.putString("number",userInfo.getId());
-        editor.putString("password",userInfo.getPassword());
-        editor.putString("name",userInfo.getName());
-        editor.putString("signature",userInfo.getSignature());
-        editor.putString("email",userInfo.getEmail());
-        editor.putString("headImage",userInfo.getUrl());
-        editor.putBoolean("canLogin", true);
-        editor.commit();
-        new MyInfo().setUserInfo(userInfo);
-    }
+
 }

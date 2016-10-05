@@ -368,7 +368,7 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/cdvIfSave"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:cardElevation="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -377,36 +377,26 @@
             android:id="@+id/ll_show_to_sava"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
+            android:background="#2ca6cb"
             android:elevation="2dp"
             android:orientation="horizontal">
-
             <Button
-                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/bgwhite"
+                android:layout_weight="1"
                 android:id="@+id/btn_savaChangeInfo"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:elevation="5dp"
-                android:text="是" />
+                android:layout_height="45dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center_vertical|right"
+                android:textSize="17sp"
+                android:text="保存修改" />
 
-            <Button
-                android:background="#00000000"
+            <ImageView
+                android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="是否保存已修改信息" />
-
-            <Button
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:id="@+id/btn_noSavaChangeInfo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:elevation="5dp"
-                android:text="否" />
+                android:layout_height="45dp"
+                android:src="@drawable/ic_arrow_right" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

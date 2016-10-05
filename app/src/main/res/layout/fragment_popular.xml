@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bggray"
     tools:context="com.example.tyhj.sybfrm.fragement.Popular">
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,40 +21,35 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <LinearLayout
-
                 android:id="@+id/llseek"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways">
-
                 <include layout="@layout/piece_find" />
-
             </LinearLayout>
 
         </android.support.design.widget.AppBarLayout>
 
-        <custom.CircleRefreshLayout
-            android:id="@+id/crl_Refresh"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_marginBottom="20dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:AniBackColor="#508b90af"
-            app:AniForeColor="#ffffffff"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvToDoList"
+                android:id="@+id/rcyvEssay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-        </custom.CircleRefreshLayout>
+                />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:elevation="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="70dp"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:layout_marginTop="@dimen/fab_margin"
             app:layout_behavior="custom.ScrollAwareFABMenuBehavior"
             fab:fab_addButtonColorNormal="@color/colorAccent"
             fab:fab_icon="@drawable/ic_add_24dp"
@@ -64,7 +60,7 @@
                 android:id="@+id/fab_addEssay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="#00000000"
+                fab:fab_colorNormal="#ffffff"
                 fab:fab_colorPressed="@color/white_pressed"
                 fab:fab_size="mini"
                 fab:fab_title="写文章"
@@ -74,7 +70,7 @@
                 android:id="@+id/fab_addQuestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="#00000000"
+                fab:fab_colorNormal="#ffffff"
                 fab:fab_colorPressed="@color/white_pressed"
                 fab:fab_icon="@drawable/ic_addquestion"
                 fab:fab_size="mini"

@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tyhj.sybfrm.Adpter.EssayAdpter;
 import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
 import com.example.tyhj.sybfrm.R;
+import com.example.tyhj.sybfrm.info.Essay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +24,11 @@ public class Categories_1 extends Fragment {
     ShowButton showButton;
     View view;
     RecyclerView rcyvPopularEssay;
-    private SimpleAdapter mAdapter;
-    private List<String> mDatas;
+    private EssayAdpter mAdapter;
+    private List<Essay> mDatas;
+    String testUserUrl="http://ac-fgtnb2h8.clouddn.com/21d88c8102759c96ecdf.jpg";
+    String testEssayUrl="http://tupian.enterdesk.com/2014/lxy/2014/04/24/2/6.jpg";
+    String testEssayUrl2="http://photo.enterdesk.com/2011-7-17/enterdesk.com-D7E968D1602DAED1B19229CF1BD3C5B1.jpg";
     public Categories_1() {
         // Required empty public constructor
     }
@@ -66,11 +71,13 @@ public class Categories_1 extends Fragment {
     }
 
     private void recycleView() {
-        mDatas=new ArrayList<String>();
-        for(int i='A';i<='z';i++){
-            mDatas.add(""+(char)i);
-        }
-        mAdapter=new SimpleAdapter(getActivity(),mDatas);
+        mDatas=new ArrayList<Essay>();
+        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl2,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://img1.imgtn.bdimg.com/it/u=1792538780,2798164743&fm=21&gp=0.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201409/2014092008.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201512/2015123007.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
+        mAdapter=new EssayAdpter(getActivity(),mDatas);
         rcyvPopularEssay.setAdapter(mAdapter);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         rcyvPopularEssay.setLayoutManager(linearLayoutManager);
