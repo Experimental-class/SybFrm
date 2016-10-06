@@ -50,17 +50,20 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import static android.content.Intent.ACTION_GET_CONTENT;
+import static android.content.Intent.ACTION_OPEN_DOCUMENT;
+
 @EActivity(R.layout.activity_write_essay)
 public class WriteEssay extends AppCompatActivity {
     boolean what;
     Uri imageUri;
     String date, essayUrl;
-    File outputImage = null;
     Button camoral, images;
+    ContentResolver contentResolver;
+    String path = Environment.getExternalStorageDirectory() + "/SybFrm";
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
-    int WHERE_PHOTO = 0;
-
+    public static final int PICK_PHOTO=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +163,7 @@ public class WriteEssay extends AppCompatActivity {
             et_title.setText(MyFunction.getEssay(this)[0]);
             edit_text.setText(MyFunction.getEssay(this)[1]);
         }
+        contentResolver = getContentResolver();
     }
 
     //选择图片
@@ -178,45 +182,22 @@ public class WriteEssay extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
-                File f1 = new File(Environment.getExternalStorageDirectory() + "/SybFrm");
-                if (!f1.exists()) {
-                    f1.mkdirs();
-                }
-                MyTime myTime = new MyTime();
-                date = myTime.getYear() + myTime.getMonth_() + myTime.getDays() +
-                        myTime.getWeek_() + myTime.getHour() + myTime.getMinute() +
-                        myTime.getSecond() + MyFunction.getUserInfo().getName() + ".JPEG";
-                outputImage = new File(Environment
-                        .getExternalStorageDirectory() + "/SybFrm", date);
-                try {
-                    if (outputImage.exists()) {
-                        outputImage.delete();
-                    }
-                    outputImage.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                imageUri = Uri.fromFile(outputImage);
-
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                WHERE_PHOTO = 1;
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 startActivityForResult(intent, TAKE_PHOTO);
             }
         });
         // 相册
         images.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 dialog.cancel();
-                WHERE_PHOTO = 2;
-                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+                Intent intent = new Intent(ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 intent.putExtra("crop", true);
                 intent.putExtra("scale", true);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, PICK_PHOTO);
             }
         });
     }
@@ -224,57 +205,42 @@ public class WriteEssay extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            //这是从相机返回的数据
             case TAKE_PHOTO:
-                MyTime myTime = new MyTime();
+                getDate();
                 if (resultCode == WriteEssay.this.RESULT_OK) {
-                    date = myTime.getYear() + myTime.getMonth_() + myTime.getDays() +
-                            myTime.getWeek_() + myTime.getHour() + myTime.getMinute() +
-                            myTime.getSecond() + MyFunction.getUserInfo().getName() + ".JPEG";
-                    if (outputImage != null) {
-                        File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                        MyFunction.ImgCompress(outputImage.getPath(), newFile);
-                    } else {
-                        if (data != null) {
-                            imageUri = data.getData();
-                        }
-                        ContentResolver contentResolver = getContentResolver();
-                        String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
-                        try {
-                            File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                            MyFunction.ImgCompress(path_pre, newFile);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                  /*  Bitmap bitmap= null;
-                    try {
-                        bitmap = BitmapFactory.decodeStream(WriteEssay.this.getContentResolver().openInputStream(imageUri));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                    if (data != null) {
+                        imageUri = data.getData();
                     }
-                    MyFunction.saveBitmapFile(bitmap,date,WriteEssay.this);*/
-                    }
-                    Intent intent = new Intent("com.android.camera.action.CROP");
-                    intent.setDataAndType(imageUri, "image/*");
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    startActivityForResult(intent, CROP_PHOTO);
-
+                    String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
+                    File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
+                    MyFunction.ImgCompress(path_pre, newFile);
+                    cropPhoto(Uri.fromFile(newFile));
                 }
                 break;
+            //这是从相册返回的数据
+            case PICK_PHOTO:
+                getDate();
+                if (resultCode == WriteEssay.this.RESULT_OK) {
+                    if (data != null) {
+                        imageUri = data.getData();
+                    }
+                    String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
+                    File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
+                    MyFunction.ImgCompress(path_pre, newFile);
+                    cropPhoto(Uri.fromFile(newFile));
+                }
+                break;
+            //剪裁图片返回数据,就是原来的文件
             case CROP_PHOTO:
                 if (resultCode == WriteEssay.this.RESULT_OK) {
+                    final String fileName = path + "/" + date;
+                    File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
+                    MyFunction.ImgCompress(fileName, newFile);
+
                     try {
-                        if (outputImage != null)
-                            outputImage = null;
-                        String path = Environment.getExternalStorageDirectory() + "/SybFrm";
-                        WHERE_PHOTO = 0;
                         if (!MyFunction.isIntenet(WriteEssay.this))
                             return;
-                        final String fileName = path + "/" + date;
-                        /*
-                        *
-                        * 保存图片
-                        并且保存URL到数据库
-                        */
                         AVObject avObject = new AVObject("EssayImage");
                         final AVFile file = AVFile.withAbsoluteLocalPath("Essay.JPEG", fileName);
                         avObject.put("image", file);
@@ -297,6 +263,20 @@ public class WriteEssay extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    public void cropPhoto(Uri imageUri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(imageUri, "image/*");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, CROP_PHOTO);
+    }
+
+    public void getDate() {
+        MyTime myTime = new MyTime();
+        date = myTime.getYear() + myTime.getMonth_() + myTime.getDays() +
+                myTime.getWeek_() + myTime.getHour() + myTime.getMinute() +
+                myTime.getSecond() + MyFunction.getUserInfo().getName() + ".JPEG";
     }
 
     //获取图片URl

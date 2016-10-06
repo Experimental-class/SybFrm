@@ -1,5 +1,6 @@
 package com.example.tyhj.sybfrm;
 
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -20,6 +21,8 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+
+import java.io.File;
 
 import custom.MyViewPager;
 import custom.ShowButton;
@@ -47,6 +50,9 @@ import custom.ShowButton;
 
     @AfterViews
     void  afterview(){
+        File f1 = new File(Environment.getExternalStorageDirectory() + "/SybFrm");
+        if (!f1.exists())
+            f1.mkdirs();
         setInitColor();
         popular=new Popular();
         categories=new Categories(Home.this);
