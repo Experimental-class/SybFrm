@@ -3,9 +3,8 @@ package com.example.tyhj.sybfrm;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -26,6 +25,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.example.tyhj.sybfrm.info.UserInfo;
 import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 import com.squareup.picasso.Picasso;
@@ -40,8 +45,9 @@ import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
+
+import static android.content.Intent.ACTION_GET_CONTENT;
+import static com.example.tyhj.sybfrm.activity.WriteEssay.PICK_PHOTO;
 
 @EActivity(R.layout.activity_set_user_info)
 public class SetUserInfo extends AppCompatActivity {
@@ -51,14 +57,16 @@ public class SetUserInfo extends AppCompatActivity {
     Uri imageUri;
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
-    int WHERE_PHOTO = 0;
-    String date;
+    String date,essayUrl;
     Button camoral, images;
+    ContentResolver contentResolver;
+    String path = Environment.getExternalStorageDirectory() + "/SybFrm";
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         animation= AnimationUtils.loadAnimation(this,R.anim.bottombarup);
+        contentResolver=getContentResolver();
     }
 
     @ViewById
@@ -81,7 +89,10 @@ public class SetUserInfo extends AppCompatActivity {
 
     @Click(R.id.iv_userHeadImage)
     void changeHeadImage(){
-        dialog();
+        if(!MyFunction.istour())
+            dialog();
+        else
+            mToast(iv_userHeadImage,"游客身份没有该权限",Snackbar.LENGTH_SHORT);
     }
 
     @Click(R.id.btn_savaChangeInfo)
@@ -93,14 +104,14 @@ public class SetUserInfo extends AppCompatActivity {
     void afterViews(){
         iv_userHeadImage.setClipToOutline(true);
         iv_userHeadImage.setOutlineProvider(MyFunction.getOutline(true,10,0));
-        Picasso.with(this).load("http://ac-fgtnb2h8.clouddn.com/21d88c8102759c96ecdf.jpg").into(iv_userHeadImage);
+        Picasso.with(this).load(MyFunction.getUserInfo().getUrl()).into(iv_userHeadImage);
         initView();
         clik();
     }
 
     @UiThread
-    void mToast(View view,String str){
-        Snackbar.make(view,str,Snackbar.LENGTH_INDEFINITE).show();
+    void mToast(View view,String str,int time){
+        Snackbar.make(view,str,time).show();
     }
 
     @UiThread
@@ -116,7 +127,7 @@ public class SetUserInfo extends AppCompatActivity {
         *
         */
 
-        mToast(tv_userName,"已保存");
+        mToast(tv_userName,"已保存",Snackbar.LENGTH_INDEFINITE);
         finishActivity();
     }
 
@@ -189,6 +200,7 @@ public class SetUserInfo extends AppCompatActivity {
         }
     };
     // 上传用户头像
+    //选择图片
     private void dialog() {
         AlertDialog.Builder di;
         di = new AlertDialog.Builder(SetUserInfo.this);
@@ -196,7 +208,7 @@ public class SetUserInfo extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(SetUserInfo.this);
         View layout = inflater.inflate(R.layout.headchoose, null);
         di.setView(layout);
-        final Dialog dialog=di.show();
+        final Dialog dialog = di.show();
         camoral = (Button) layout.findViewById(R.id.camoral);
         images = (Button) layout.findViewById(R.id.images);
         // 相机
@@ -204,92 +216,79 @@ public class SetUserInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
-                File f1 = new File(Environment.getExternalStorageDirectory()+"/SybFrm");
-                if(!f1.exists()){
-                    f1.mkdirs();
-                }
-                File outputImage = new File(Environment
-                        .getExternalStorageDirectory()+"/SybFrm", "head.jpg");
-                try {
-                    if (outputImage.exists()) {
-                        outputImage.delete();
-                    }
-                    outputImage.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                imageUri = Uri.fromFile(outputImage);
-
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                WHERE_PHOTO = 1;
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 startActivityForResult(intent, TAKE_PHOTO);
             }
         });
         // 相册
         images.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 dialog.cancel();
-                WHERE_PHOTO = 2;
-                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+                Intent intent = new Intent(ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 intent.putExtra("crop", true);
                 intent.putExtra("scale", true);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, PICK_PHOTO);
             }
         });
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            //这是从相机返回的数据
             case TAKE_PHOTO:
+                getDate();
                 if (resultCode == SetUserInfo.this.RESULT_OK) {
                     if (data != null) {
                         imageUri = data.getData();
                     }
-                    SimpleDateFormat df = new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm:ss");// 设置日期格式
-                    MyTime myTime=new MyTime();
-                    date =myTime.getYear()+myTime.getMonth_()+myTime.getDays()+
-                            myTime.getWeek_()+myTime.getHour()+myTime.getMinute()+
-                            myTime.getSecond()+ MyFunction.getUserInfo().getName()+".JPEG";
-                    Bitmap bitmap= null;
-                    try {
-                        bitmap = BitmapFactory.decodeStream(SetUserInfo.this.getContentResolver().openInputStream(imageUri));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    MyFunction.saveBitmapFile(bitmap,date,SetUserInfo.this);
-
-                    File file=new File(Environment.getExternalStorageDirectory()+"/SybFrm",date);
-                    //换图片
-                    imageUri = Uri.fromFile(file);
-                    Intent intent = new Intent("com.android.camera.action.CROP");
-                    intent.setDataAndType(imageUri, "image/*");
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    startActivityForResult(intent, CROP_PHOTO);
+                    String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
+                    File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
+                    MyFunction.ImgCompress(path_pre, newFile);
+                    cropPhoto(Uri.fromFile(newFile));
                 }
                 break;
+            //这是从相册返回的数据
+            case PICK_PHOTO:
+                getDate();
+                if (resultCode == SetUserInfo.this.RESULT_OK) {
+                    if (data != null) {
+                        imageUri = data.getData();
+                    }
+                    String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
+                    File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
+                    MyFunction.ImgCompress(path_pre, newFile);
+                    cropPhoto(Uri.fromFile(newFile));
+                }
+                break;
+            //剪裁图片返回数据,就是原来的文件
             case CROP_PHOTO:
                 if (resultCode == SetUserInfo.this.RESULT_OK) {
-                    try {
-                        Picasso.with(SetUserInfo.this).load(imageUri).into(iv_userHeadImage);
-                        String path=Environment.getExternalStorageDirectory()+"/SybFrm";
-                        WHERE_PHOTO = 0;
-                        if(!MyFunction.isIntenet(SetUserInfo.this))
+                    final String fileName = path + "/" + date;
+                    File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
+                    MyFunction.ImgCompress(fileName, newFile);
+                        if (!MyFunction.isIntenet(SetUserInfo.this))
                             return;
-                        headImagefile=new File(path,date);
-                        final String fileName= MyFunction.getUserInfo().getId()+".JPEG";
-                        /*
-                        *
-                        * 保存图片
-                        并且保存URL到数据库
-                        */
-                        ifMessageChange=true;
-                    } catch (Exception e) {
+                    AVObject avObject = new AVObject("EssayImage");
+                    final AVFile file;
+                    try {
+                        file = AVFile.withAbsoluteLocalPath("Essay.JPEG", fileName);
+                        avObject.put("image", file);
+                        avObject.put("name", MyFunction.getUserInfo().getId() + date);
+                        avObject.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    getImageUrl();
+                                } else {
+                                    MyFunction.Toast(SetUserInfo.this, e.getMessage());
+                                }
+                            }
+                        });
+                    } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
@@ -299,11 +298,39 @@ public class SetUserInfo extends AppCompatActivity {
         }
     }
 
+    public void cropPhoto(Uri imageUri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(imageUri, "image/*");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, CROP_PHOTO);
+    }
+    public void getDate() {
+        MyTime myTime = new MyTime();
+        date = myTime.getYear() + myTime.getMonth_() + myTime.getDays() +
+                myTime.getWeek_() + myTime.getHour() + myTime.getMinute() +
+                myTime.getSecond() + MyFunction.getUserInfo().getName() + ".JPEG";
+    }
+    //获取图片URl
+    public void getImageUrl() {
+        AVQuery<AVObject> query = new AVQuery<>("EssayImage");
+        query.whereEqualTo("name", MyFunction.getUserInfo().getId() + date);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                // object 就是符合条件的第一个 AVObject
+                essayUrl = avObject.getAVFile("image").getUrl();
+                if (essayUrl != null)
+                  Picasso.with(SetUserInfo.this).load(essayUrl).into(iv_userHeadImage);
+            }
+        });
+    }
     @Override
     public void onBackPressed() {
-        if(ifMessageChange&&cdvIfSave.getVisibility()!=View.VISIBLE) {
+
+        if(!MyFunction.istour()&&ifMessageChange&&cdvIfSave.getVisibility()!=View.VISIBLE) {
             cdvIfSave.startAnimation(animation);
         }else
             super.onBackPressed();
     }
+
 }

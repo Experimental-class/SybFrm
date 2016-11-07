@@ -102,6 +102,7 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
         }
     }
 
+
     class EssayViewHolder extends RecyclerView.ViewHolder{
         CardView cdvEssay;
         ImageView iv_userHeadImage,ivEssayImage;

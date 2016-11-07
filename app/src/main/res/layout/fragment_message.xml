@@ -3,6 +3,7 @@
     android:layout_marginBottom="50dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/msg_bg"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.tyhj.sybfrm.fragement.Message">
 
@@ -24,7 +25,7 @@
             android:id="@+id/tabMsg"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/bgchange"
             app:tabIndicatorColor="#ffffff"
             app:tabGravity="fill"
             app:tabTextAppearance="@style/MyTabLayoutTextAppearance"

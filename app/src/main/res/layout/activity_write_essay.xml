@@ -4,6 +4,7 @@
     android:id="@+id/activity_write_essay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/chat_bg"
     tools:context="com.example.tyhj.sybfrm.activity.WriteEssay">
     <LinearLayout
         android:gravity="bottom"

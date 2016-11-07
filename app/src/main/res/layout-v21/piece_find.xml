@@ -6,8 +6,6 @@
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_marginLeft="10dp"
-        android:elevation="3dp"
-        android:background="@color/colorPrimaryLight"
         android:orientation="horizontal"
         android:layout_weight="1"
         android:layout_width="0dp"

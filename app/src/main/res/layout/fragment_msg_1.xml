@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg_no_msg"
     tools:context="com.example.tyhj.sybfrm.fragement.msgfragement.Msg_1">
 
 

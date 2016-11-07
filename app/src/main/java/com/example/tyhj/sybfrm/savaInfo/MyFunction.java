@@ -13,13 +13,18 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 
+import com.example.tyhj.sybfrm.Login;
 import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.info.UserInfo;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -30,6 +35,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -40,9 +48,19 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MyFunction {
 
-    private static int IMAGE_SIZE=500;
+    private static int IMAGE_SIZE=100;
 
     public static UserInfo userInfo;
+
+    private static boolean istour;
+
+    public static boolean istour() {
+        return istour;
+    }
+
+    public static void setIstour(boolean istour) {
+        MyFunction.istour = istour;
+    }
 
     public static UserInfo getUserInfo() {
         return userInfo;
@@ -139,13 +157,8 @@ public class MyFunction {
         stream.close();
         return buffer.toString();
     }
-    //在线获取用户信息
-    public static UserInfo getUserInfoOnline(){
-        return new UserInfo("id","url","name","email","signature","reputation","blog","github");
-    }
     //重新设置用户信息并保存用户信息到本地数据库和全局变量
-    public static void saveUserInfo(Context context) {
-        UserInfo userInfo=getUserInfoOnline();
+    public static void saveUserInfo(Context context,UserInfo userInfo) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("saveLogin", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
         editor.putString("id",userInfo.getId());
@@ -232,6 +245,7 @@ public class MyFunction {
         }
     }
 
+
     //计算图片的缩放值
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
@@ -248,16 +262,23 @@ public class MyFunction {
 
     //图片压缩
     public static void ImgCompress(String filePath,File newFile) {
+        int imageMg=100;
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
-        // Calculate inSampleSize
+        //规定要压缩图片的分辨率
         options.inSampleSize = calculateInSampleSize(options,720,1280);
-        // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         Bitmap bitmap= BitmapFactory.decodeFile(filePath, options);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, imageMg, baos);
+        //如果文件大于100KB就进行质量压缩，每次压缩比例增加百分之五
+        while (baos.toByteArray().length / 1024 > IMAGE_SIZE&&imageMg>50){
+            baos.reset();
+            imageMg-=5;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, imageMg, baos);
+        }
+        //然后输出到指定的文件中
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(newFile);
@@ -270,5 +291,62 @@ public class MyFunction {
         }
     }
 
-    //
+    public static String getStringFromInputStream(InputStream is)
+            throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        // 模板代码 必须熟练
+        byte[] buffer = new byte[1024];
+        int len = -1;
+        // 一定要写len=is.read(buffer)
+        // 如果while((is.read(buffer))!=-1)则无法将数据写入buffer中
+        while ((len = is.read(buffer)) != -1) {
+            os.write(buffer, 0, len);
+        }
+        is.close();
+        String state = os.toString();// 把流中的数据转换成字符串,采用的编码是utf-8(模拟器默认编码)
+        os.close();
+        return state;
+    }
+
+
+    public static boolean doPostToGetUserInfo( Context context,String id){
+        try {
+            HttpURLConnection conn = null;
+            String url = "http://139.129.24.151:5000/u/query";
+            URL mURL = new URL(url);
+            conn = (HttpURLConnection) mURL.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(10000);
+            conn.setDoOutput(true);
+            String data =  "u_id=" + id;
+            OutputStream out = conn.getOutputStream();
+            out.write(data.getBytes());
+            out.flush();
+            out.close();
+            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
+            if (responseCode == 200) {
+                InputStream is = conn.getInputStream();
+                String state = getStringFromInputStream(is);
+                JSONObject jsonObject=new JSONObject(state);
+                if(jsonObject.getInt("code")==1){
+                    Log.i("TAG",state);
+                    MyFunction.saveUserInfo(context,new UserInfo(
+                            jsonObject.getString("u_id"),
+                            "url",
+                            jsonObject.getString("u_name"),
+                            jsonObject.getString("u_email"),
+                            jsonObject.getString("u_intro"),
+                            jsonObject.getString("u_reputation"),
+                            jsonObject.getString("u_blog"),
+                            jsonObject.getString("u_github")));
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
 }

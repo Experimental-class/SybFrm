@@ -8,10 +8,11 @@
     <color name="white_pressed">#f1f1f1</color>
     <color name="half_black">#808080</color>
     <color name="bgwhite">#ffffff</color>
-    <color name="bggray">#efefef</color>
+    <color name="bggray">#f5f5f5</color>
     <color name="iccolor">#a1a1a1</color>
     <color name="ichome">#a1a1a1</color>
     <color name="purple">#88147f</color>
     <color name="hint">#88147f</color>
     <color name="title">#000000</color>
+    <color name="bule">#2ca6cb</color>
 </resources>

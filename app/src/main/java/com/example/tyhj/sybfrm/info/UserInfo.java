@@ -4,7 +4,7 @@ package com.example.tyhj.sybfrm.info;
  * Created by _Tyhj on 2016/8/3.
  */
 public class UserInfo {
-    String id,url, name, email, signature,reputation,blog,github;
+    String id,url, name, email, signature,reputation,blog,github,password;
 
     @Override
     public String toString() {
@@ -90,5 +90,13 @@ public class UserInfo {
 
     public void setGithub(String github) {
         this.github = github;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -5,7 +5,7 @@ def AAVersion = '4.0.0'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
+    useLibrary 'org.apache.http.legacy'
 
     //为了解决部分第三方库重复打包了META-INF的问题
     packagingOptions{

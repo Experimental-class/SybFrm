@@ -116,4 +116,7 @@
     <string name="aboutemail">你可以使用注册邮箱或用户名进行登陆，如果还没有注册，可以进行注册或者直接点击下一步以游客的身份进行浏览</string>
     <string name="aboutregister">你的邮箱或者用户名将作为你的登陆账号，邮箱需要进行验证，并且作为修改密码的凭证</string>
     <string name="aboutchangepassword">你可以输入你的注册邮箱获取验证码，进行验证邮箱后可以重置你的密码，修改密码后请牢记自己的密码，不要将密码泄露给他人</string>
+    <string name="texttype">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="intro">这位同学很懒，什么都没有留下</string>
+    <string name="defaultHeadImage">http://ac-fgtnb2h8.clouddn.com/10959151526549f3e9b3.jpg</string>
 </resources>

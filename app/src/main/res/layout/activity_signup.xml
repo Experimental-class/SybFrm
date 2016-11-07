@@ -23,13 +23,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <EditText
+            android:digits="@string/texttype"
             android:layout_marginTop="30dp"
             android:textColorHint="@color/hint"
             android:id="@+id/etSignupName"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:hint="用户名"
-            android:inputType="textVisiblePassword"
             android:singleLine="true" />
 
         <EditText
@@ -38,7 +38,7 @@
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:hint="邮箱地址"
-            android:inputType="textEmailSubject"
+            android:inputType="textEmailAddress"
             android:singleLine="true" />
 
         <EditText

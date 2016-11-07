@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -43,15 +44,21 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static android.content.Intent.ACTION_GET_CONTENT;
 import static android.content.Intent.ACTION_OPEN_DOCUMENT;
+import static com.example.tyhj.sybfrm.savaInfo.MyFunction.getStringFromInputStream;
 
 @EActivity(R.layout.activity_write_essay)
 public class WriteEssay extends AppCompatActivity {
@@ -105,7 +112,7 @@ public class WriteEssay extends AppCompatActivity {
         if (title.equals("") || text.equals("")) {
             Snackbar.make(iv_publish, "标题或者内容不能为空", Snackbar.LENGTH_SHORT).show();
         } else {
-            publishEssay();
+            publishEssay(title,text,"tags");
         }
     }
 
@@ -130,27 +137,20 @@ public class WriteEssay extends AppCompatActivity {
 
     }
 
-    @Background
-    void publishEssay() {
-        /*
-        * 在此
-        * 发表文章
-        *
-        */
-        finishActivity();
-    }
-
     @UiThread
     void finishActivity() {
         Toast.makeText(this, "发表成功", Toast.LENGTH_SHORT).show();
         MyFunction.deleteEssay(this);
         this.finish();
     }
+    @android.support.annotation.UiThread
+    void snackBar(String string,int time){
+        Snackbar.make(iv_publish,string,time).show();
+    }
 
     @UiThread
     void setEssayUrl() {
         edit_text.setText(edit_text.getText().toString() + "![](" + essayUrl + ")");
-        ;
     }
 
     @AfterViews
@@ -165,6 +165,50 @@ public class WriteEssay extends AppCompatActivity {
         }
         contentResolver = getContentResolver();
     }
+
+    //连接服务器并发表
+    @Background
+    public void publishEssay(String title ,String text,String tags){
+
+        try {
+            HttpURLConnection conn = null;
+            String url = "http://139.129.24.151:5000/t/add";
+            URL mURL = new URL(url);
+            conn = (HttpURLConnection) mURL.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(10000);
+            conn.setDoOutput(true);
+            String data =  "u_id=" + MyFunction.getUserInfo().getId() + "&u_psw=" + MyFunction.getUserInfo().getPassword()+"&u_title="+title+"&u_text="+text+"&u_tags="+tags;
+            OutputStream out = conn.getOutputStream();
+            out.write(data.getBytes());
+            out.flush();
+            out.close();
+            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
+            if (responseCode == 200) {
+                InputStream is = conn.getInputStream();
+                String state = getStringFromInputStream(is);
+                JSONObject jsonObject=new JSONObject(state);
+                if(jsonObject.getInt("code")==1){
+                    finishActivity();
+                }else {
+                    snackBar(jsonObject.getString("codeState"),Snackbar.LENGTH_SHORT);
+                }
+            } else {
+                Log.i("TAG", "访问失败" + responseCode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //获取tags
+    @Background
+    void getTags(){
+
+    }
+
+
 
     //选择图片
     private void dialog() {

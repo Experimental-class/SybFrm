@@ -17,6 +17,7 @@ import com.example.tyhj.sybfrm.Login;
 import com.example.tyhj.sybfrm.Login_;
 import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.SetUserInfo_;
+import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 
 import org.androidannotations.annotations.Click;
 
@@ -53,9 +54,9 @@ public class More extends Fragment implements View.OnClickListener{
 
     void initViews() {
         fabSetInfo= (FloatingActionButton) view.findViewById(R.id.fabSetInfo);
-        CollapsingToolbarLayout toolbarLayout= (CollapsingToolbarLayout) view.findViewById(R.id.maincollapsing);
+        CollapsingToolbarLayout toolbarLayout= (CollapsingToolbarLayout) view.findViewById(R.id.maincollapsingx);
         //设置名字
-        toolbarLayout.setTitle("Tyhj");
+        toolbarLayout.setTitle(MyFunction.getUserInfo().getName());
 
         fabSetInfo.setOnClickListener(new View.OnClickListener() {
             @Override

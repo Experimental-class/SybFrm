@@ -22,7 +22,7 @@
             android:id="@+id/tabAllquestions"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/bgchange"
             app:tabPaddingEnd="30dp"
             app:tabPaddingStart="30dp"
             app:tabIndicatorColor="#ffffff"

@@ -32,7 +32,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="50dp"
             android:hint="你的邮箱/用户名"
-            android:inputType="number"
+            android:digits="@string/texttype"
             android:singleLine="true" />
 
         <EditText
