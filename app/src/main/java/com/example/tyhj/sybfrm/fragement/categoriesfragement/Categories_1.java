@@ -1,10 +1,12 @@
 package com.example.tyhj.sybfrm.fragement.categoriesfragement;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,19 @@ import com.example.tyhj.sybfrm.Adpter.EssayAdpter;
 import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
 import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.info.Essay;
+import com.example.tyhj.sybfrm.savaInfo.MyFunction;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 import custom.OnVerticalScrollListener;
 import custom.ShowButton;
+
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 public class Categories_1 extends Fragment {
     ShowButton showButton;
@@ -45,6 +54,24 @@ public class Categories_1 extends Fragment {
         view=inflater.inflate(R.layout.fragment_categories_1, null);
         rcyvPopularEssay= (RecyclerView) view.findViewById(R.id.rcyvPopularEssay);
         recycleView();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String[] str=MyFunction.getEssayId(0);
+                if(str!=null) {
+                    for (int i = 0; i < str.length; i++) {
+                        try {
+                            mDatas.add(MyFunction.getEssay("t_id=" + str[i]));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    handler.sendEmptyMessage(1);
+                }else {
+                    Log.e("失败","为什么");
+                }
+            }
+        }).start();
         return view;
     }
 
@@ -72,11 +99,11 @@ public class Categories_1 extends Fragment {
 
     private void recycleView() {
         mDatas=new ArrayList<Essay>();
-        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl2,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj","http://img1.imgtn.bdimg.com/it/u=1792538780,2798164743&fm=21&gp=0.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201409/2014092008.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201512/2015123007.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl2,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://img1.imgtn.bdimg.com/it/u=1792538780,2798164743&fm=21&gp=0.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201409/2014092008.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201512/2015123007.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
         mAdapter=new EssayAdpter(getActivity(),mDatas);
         rcyvPopularEssay.setAdapter(mAdapter);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -87,4 +114,15 @@ public class Categories_1 extends Fragment {
     public void setShowme(ShowButton showButton){
         this.showButton=showButton;
     }
+
+    android.os.Handler handler=new android.os.Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    mAdapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
 }

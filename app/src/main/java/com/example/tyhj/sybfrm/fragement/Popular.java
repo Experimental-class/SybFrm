@@ -5,6 +5,7 @@ import android.os.*;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
@@ -27,6 +28,7 @@ import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.activity.WriteEssay;
 import com.example.tyhj.sybfrm.activity.WriteEssay_;
 import com.example.tyhj.sybfrm.info.Essay;
+import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -115,6 +117,11 @@ public class Popular extends Fragment {
         fab_addEssay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(MyFunction.istour()){
+                    Snackbar.make(fab_addEssay,"游客没有该权限",Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+
                 startActivity(new Intent(getActivity(), WriteEssay_.class).putExtra("what",true));
             }
         });
@@ -122,6 +129,10 @@ public class Popular extends Fragment {
         fab_addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(MyFunction.istour()){
+                    Snackbar.make(fab_addEssay,"游客没有该权限",Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(getActivity(), WriteEssay_.class).putExtra("what",false));
             }
         });
@@ -138,11 +149,11 @@ public class Popular extends Fragment {
 
     private void getEssayDate() {
         mDatas=new ArrayList<Essay>();
-        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl2,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj","http://img1.imgtn.bdimg.com/it/u=1792538780,2798164743&fm=21&gp=0.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201409/2014092008.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201512/2015123007.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl2,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://img1.imgtn.bdimg.com/it/u=1792538780,2798164743&fm=21&gp=0.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201409/2014092008.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
+        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201512/2015123007.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
     }
 
     void initView(){

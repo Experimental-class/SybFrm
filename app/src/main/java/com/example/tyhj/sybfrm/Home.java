@@ -6,21 +6,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.avos.avoscloud.AVOSCloud;
 import com.example.tyhj.sybfrm.fragement.Categories;
 import com.example.tyhj.sybfrm.fragement.Message;
 import com.example.tyhj.sybfrm.fragement.More;
 import com.example.tyhj.sybfrm.fragement.Popular;
+import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONException;
 
 import java.io.File;
 
@@ -40,6 +44,7 @@ import custom.ShowButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AVOSCloud.initialize(this, "9TEdV93wArW7MsWdxs68q3SA-gzGzoHsz", "GWOVe9GReFOYa6HlnefJzE98");
     }
 
     @ViewById

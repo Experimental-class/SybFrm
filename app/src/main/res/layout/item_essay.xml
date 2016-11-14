@@ -32,7 +32,7 @@
 
             <ImageView
                 android:adjustViewBounds="true"
-                android:maxHeight="230dp"
+                android:maxHeight="220dp"
                 android:layout_marginTop="5dp"
                 android:id="@+id/ivEssayImage"
                 android:scaleType="centerCrop"

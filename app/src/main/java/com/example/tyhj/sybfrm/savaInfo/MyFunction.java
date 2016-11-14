@@ -20,10 +20,15 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.example.tyhj.sybfrm.Login;
 import com.example.tyhj.sybfrm.R;
+import com.example.tyhj.sybfrm.info.Essay;
 import com.example.tyhj.sybfrm.info.UserInfo;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -37,6 +42,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 
@@ -48,11 +54,14 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MyFunction {
 
+    private static String URL="http://139.129.24.151:5000";
+
     private static int IMAGE_SIZE=100;
 
     public static UserInfo userInfo;
 
-    private static boolean istour;
+    private static boolean istour=true;
+    private static UserInfo userInfo1;
 
     public static boolean istour() {
         return istour;
@@ -91,6 +100,7 @@ public class MyFunction {
     public static void Toast(Context context,String str){
         Toast.makeText(context,str,Toast.LENGTH_SHORT).show();
     }
+
     //保存bitmap为File
     public static void saveBitmapFile(Bitmap bm, String name, Context context) {
         if(bm==null)
@@ -178,15 +188,18 @@ public class MyFunction {
         SharedPreferences sharedPreferences = context.getSharedPreferences("saveLogin", MODE_PRIVATE);
         MyFunction.setUserInfo(new UserInfo(
                 sharedPreferences.getString("id",null),
-                sharedPreferences.getString("name",null),
-                sharedPreferences.getString("signature",null),
-                sharedPreferences.getString("email",null),
                 sharedPreferences.getString("headImage",null),
+                sharedPreferences.getString("name",null),
+                sharedPreferences.getString("email",null),
+                sharedPreferences.getString("signature",null),
+                sharedPreferences.getString("reputation",null),
                 sharedPreferences.getString("blog",null),
-                sharedPreferences.getString("github",null),
-                sharedPreferences.getString("reputation",null)
-        ));
+                sharedPreferences.getString("github",null)
 
+        ));
+        sharedPreferences = context.getSharedPreferences("savePas", MODE_PRIVATE);
+        MyFunction.getUserInfo().setPassword(sharedPreferences.getString("pas",null));
+        Log.e("本地信息",sharedPreferences.getString("name","没有"+sharedPreferences.getString("pas",null)));
     }
     //是否可以登录
     public static boolean canLog(Context context){
@@ -308,8 +321,52 @@ public class MyFunction {
         return state;
     }
 
+    //获取用户信息
+    public static boolean doPostToGetUserInfo( Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("saveLogin", MODE_PRIVATE);
+        try {
+            HttpURLConnection conn = null;
+            String url = "http://139.129.24.151:5000/u/query";
+            URL mURL = new URL(url);
+            conn = (HttpURLConnection) mURL.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(10000);
+            conn.setDoOutput(true);
+            String data =  "u_id=" + sharedPreferences.getString("id",null);
+            OutputStream out = conn.getOutputStream();
+            out.write(data.getBytes());
+            out.flush();
+            out.close();
+            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
+            if (responseCode == 200) {
+                InputStream is = conn.getInputStream();
+                String state = getStringFromInputStream(is);
+                JSONObject jsonObject=new JSONObject(state);
+            if(jsonObject.getInt("code")==1){
+                //Log.e("Tag",state);
+                MyFunction.saveUserInfo(context,new UserInfo(
+                        jsonObject.getString("u_id"),
+                        "url",
+                        jsonObject.getString("u_name"),
+                        jsonObject.getString("u_email"),
+                        jsonObject.getString("u_intro"),
+                        jsonObject.getString("u_reputation"),
+                        jsonObject.getString("u_blog"),
+                        jsonObject.getString("u_github")));
+                return true;
+            }else {
+                //Log.e("Tag",jsonObject.getString("codeState"));
+            }
+        }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
 
-    public static boolean doPostToGetUserInfo( Context context,String id){
+    }
+    //查询用户信息
+    public static UserInfo getUserInfo(String id) throws JSONException {
         try {
             HttpURLConnection conn = null;
             String url = "http://139.129.24.151:5000/u/query";
@@ -330,23 +387,139 @@ public class MyFunction {
                 String state = getStringFromInputStream(is);
                 JSONObject jsonObject=new JSONObject(state);
                 if(jsonObject.getInt("code")==1){
-                    Log.i("TAG",state);
-                    MyFunction.saveUserInfo(context,new UserInfo(
-                            jsonObject.getString("u_id"),
+                    userInfo1 = new UserInfo(
+                            id,
                             "url",
                             jsonObject.getString("u_name"),
                             jsonObject.getString("u_email"),
                             jsonObject.getString("u_intro"),
                             jsonObject.getString("u_reputation"),
                             jsonObject.getString("u_blog"),
-                            jsonObject.getString("u_github")));
-                    return true;
+                            jsonObject.getString("u_github"));
+                    //Log.e("TAG",userInfo1.toString());
+                    return userInfo1;
+                }else
+                    Log.e("TAG",jsonObject.getString("codeState"));
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    //获取文章
+    public static String[] getEssayId(int type){
+        HttpURLConnection conn = null;
+        String url = "http://139.129.24.151:5000/t/display";
+        URL mURL = null;
+        try {
+            mURL = new URL(url);
+            conn = (HttpURLConnection) mURL.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(10000);
+            conn.setDoOutput(true);
+            OutputStream out = conn.getOutputStream();
+            String data ="show_count=" + 20;
+            out.write(data.getBytes());
+            out.flush();
+            out.close();
+            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
+            if (responseCode == 200) {
+                InputStream is = conn.getInputStream();
+                String state = getStringFromInputStream(is);
+                JSONObject jsonObject=new JSONObject(state);
+                if(jsonObject.getInt("code")==1){
+                    String str=jsonObject.getString("t_ids");
+                    String[] strings=str.split("&");
+                    String [] strings1=strings[0].split(",");
+                    String[] strings2=strings[1].split(",");
+                    //Log.i("TAG_文章信息",state+strings1[0]);
+                    if(type==0)
+                        return strings1;
+                    else
+                        return strings2;
                 }
             }
-            return false;
+            return null;
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
+            return null;
         }
+    }
+    //获取信息
+    public static JSONObject getJson(String data,String url){
+        HttpURLConnection conn = null;
+        URL mURL = null;
+        try {
+            mURL = new URL(url);
+            conn = (HttpURLConnection) mURL.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(10000);
+            conn.setDoOutput(true);
+            OutputStream out = conn.getOutputStream();
+            out.write(data.getBytes());
+            out.flush();
+            out.close();
+            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
+            if (responseCode == 200) {
+                InputStream is = conn.getInputStream();
+                String state = getStringFromInputStream(is);
+                JSONObject jsonObject=new JSONObject(state);
+                if(jsonObject.getInt("code")==1){
+                    return jsonObject;
+                }else {
+                    Log.e("Tag",jsonObject.getString("codeState"));
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //获取文章
+    public static Essay getEssay(String id) throws JSONException {
+        String url=URL+"/t/query";
+        JSONObject json=getJson(id,url);
+        if(json==null)
+            return null;
+        else {
+            String str=json.getString("t_text");
+            String essayUrl=null;
+            if(str.length()>10)
+                essayUrl=str.substring(str.indexOf("![](http://")+4,str.indexOf(".JPEG)")+5);
+            //Log.e("TAg",str+"xxxxxx"+essayUrl+"");
+            Essay essay=new Essay(
+                    MyFunction.getUserHeadImage(json.getString("u_id")),
+                    MyFunction.getUserInfo(json.getString("u_id")).getName(),
+                    //json.getString("u_id"),
+                    essayUrl,
+                    json.getString("t_title"),
+                    json.getString("t_text"),
+                    json.getString("t_like"),
+                    json.getString("t_star"),
+                    json.getString("t_comments"),
+                    json.getString("t_date_latest"),
+                    json.getString("t_id"),
+                    json.getString("u_id")
+            );
+            //Log.e("EssayInfo",essay.toString());
+            return essay;
+        }
+    }
+    //获取用户头像
+    public static String getUserHeadImage(String id){
 
+        AVQuery<AVObject> query=new AVQuery<>("HeadImage");
+        query.whereEqualTo("userId",id);
+        try {
+            AVObject object= query.getFirst();
+            if(object!=null)
+            return object.getAVFile("headImage").getUrl();
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

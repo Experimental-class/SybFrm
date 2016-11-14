@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +57,8 @@ public class More extends Fragment implements View.OnClickListener{
         fabSetInfo= (FloatingActionButton) view.findViewById(R.id.fabSetInfo);
         CollapsingToolbarLayout toolbarLayout= (CollapsingToolbarLayout) view.findViewById(R.id.maincollapsingx);
         //设置名字
-        toolbarLayout.setTitle(MyFunction.getUserInfo().getName());
-
+        toolbarLayout.setTitle(MyFunction.getUserInfo().getName()+"");
+        //Log.e("测试",MyFunction.getUserInfo().toString());
         fabSetInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

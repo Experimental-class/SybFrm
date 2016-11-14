@@ -54,11 +54,17 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("saveLogin", MODE_PRIVATE);
         if(MyFunction.canLog(this)){
+            MyFunction.setIstour(false);
             if(MyFunction.isIntenet(this)){
-                MyFunction.doPostToGetUserInfo(Login.this,sharedPreferences.getString("id",null));
+                MyFunction.getInitInformation(this);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        MyFunction.doPostToGetUserInfo(Login.this);
+                    }
+                }).start();
             }else {
                 MyFunction.getInitInformation(this);
             }
@@ -94,7 +100,6 @@ public class Login extends AppCompatActivity {
         if(id.equals("")&&password.equals("")){
             Toast.makeText(Login.this,"以游客身份登陆",Toast.LENGTH_SHORT).show();
             MyFunction.setUserInfo(new UserInfo("5233",getString(R.string.defaultHeadImage),"tour#5233","null",getString(R.string.intro),"0","null","null"));
-            MyFunction.setIstour(true);
             finishActivity();
         }else {
             Snackbar.make(btnLogin, "登陆中", Snackbar.LENGTH_INDEFINITE).show();
@@ -146,6 +151,10 @@ public class Login extends AppCompatActivity {
                             jsonObject.getString("u_reputation"),
                             jsonObject.getString("u_blog"),
                             jsonObject.getString("u_github")));
+                    SharedPreferences sharedPreferences=getSharedPreferences("savePas", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
+                    editor.putString("pas",etUserPassword.getText().toString());
+                    editor.commit();
                     MyFunction.setIstour(false);
                     MyFunction.getUserInfo().setPassword(etUserPassword.getText().toString());
                     finishActivity();

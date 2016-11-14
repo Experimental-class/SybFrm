@@ -5,9 +5,9 @@ package com.example.tyhj.sybfrm.info;
  */
 
 public class Essay {
-    private String userHeadImageUrl,userName,essayImageUrl,essayTitle,essayBody,agree,collect,remark,time,id;
+    private String userHeadImageUrl,userName,essayImageUrl,essayTitle,essayBody,agree,collect,remark,time,e_id,u_id;
 
-    public Essay(String userHeadImageUrl, String userName, String essayImageUrl, String essayTitle, String essayBody, String agree, String collect, String remark, String time, String id) {
+    public Essay(String userHeadImageUrl, String userName, String essayImageUrl, String essayTitle, String essayBody, String agree, String collect, String remark, String time, String e_id,String u_id) {
         this.userHeadImageUrl = userHeadImageUrl;
         this.userName = userName;
         this.essayImageUrl = essayImageUrl;
@@ -17,7 +17,16 @@ public class Essay {
         this.collect = collect;
         this.remark = remark;
         this.time = time;
-        this.id = id;
+        this.e_id = e_id;
+        this.u_id=u_id;
+    }
+
+    public void setU_id(String u_id) {
+        this.u_id = u_id;
+    }
+
+    public String getU_id() {
+        return u_id;
     }
 
     public String getTime() {
@@ -28,12 +37,12 @@ public class Essay {
         this.time = time;
     }
 
-    public String getId() {
-        return id;
+    public String getE_id() {
+        return e_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setE_id(String id) {
+        this.e_id = id;
     }
 
     public String getUserHeadImageUrl() {
@@ -98,5 +107,22 @@ public class Essay {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @Override
+    public String toString() {
+        return "Essay{" +
+                "userHeadImageUrl='" + userHeadImageUrl + '\'' +
+                ", userName='" + userName + '\'' +
+                ", essayImageUrl='" + essayImageUrl + '\'' +
+                ", essayTitle='" + essayTitle + '\'' +
+                ", essayBody='" + essayBody + '\'' +
+                ", agree='" + agree + '\'' +
+                ", collect='" + collect + '\'' +
+                ", remark='" + remark + '\'' +
+                ", time='" + time + '\'' +
+                ", e_id='" + e_id + '\'' +
+                ", u_id='" + u_id + '\'' +
+                '}';
     }
 }

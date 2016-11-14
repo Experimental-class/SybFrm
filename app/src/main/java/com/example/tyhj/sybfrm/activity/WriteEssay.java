@@ -179,7 +179,7 @@ public class WriteEssay extends AppCompatActivity {
             conn.setReadTimeout(5000);
             conn.setConnectTimeout(10000);
             conn.setDoOutput(true);
-            String data =  "u_id=" + MyFunction.getUserInfo().getId() + "&u_psw=" + MyFunction.getUserInfo().getPassword()+"&u_title="+title+"&u_text="+text+"&u_tags="+tags;
+            String data =  "u_id=" + MyFunction.getUserInfo().getId() + "&u_psw=" + MyFunction.getUserInfo().getPassword()+"&t_title="+title+"&t_text="+text+"&t_tags="+tags;
             OutputStream out = conn.getOutputStream();
             out.write(data.getBytes());
             out.flush();
@@ -192,7 +192,7 @@ public class WriteEssay extends AppCompatActivity {
                 if(jsonObject.getInt("code")==1){
                     finishActivity();
                 }else {
-                    snackBar(jsonObject.getString("codeState"),Snackbar.LENGTH_SHORT);
+                    snackBar(jsonObject.getString("codeState")+MyFunction.getUserInfo().getPassword(),Snackbar.LENGTH_SHORT);
                 }
             } else {
                 Log.i("TAG", "访问失败" + responseCode);
