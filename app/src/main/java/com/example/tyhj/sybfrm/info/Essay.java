@@ -1,10 +1,12 @@
 package com.example.tyhj.sybfrm.info;
 
+import java.io.Serializable;
+
 /**
  * Created by Tyhj on 2016/10/3.
  */
 
-public class Essay {
+public class Essay implements Serializable {
     private String userHeadImageUrl,userName,essayImageUrl,essayTitle,essayBody,agree,collect,remark,time,e_id,u_id;
 
     public Essay(String userHeadImageUrl, String userName, String essayImageUrl, String essayTitle, String essayBody, String agree, String collect, String remark, String time, String e_id,String u_id) {

@@ -44,7 +44,6 @@ import custom.ShowButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AVOSCloud.initialize(this, "9TEdV93wArW7MsWdxs68q3SA-gzGzoHsz", "GWOVe9GReFOYa6HlnefJzE98");
     }
 
     @ViewById

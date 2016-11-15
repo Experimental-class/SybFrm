@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
 import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.info.Essay;
 import com.example.tyhj.sybfrm.savaInfo.MyFunction;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -102,8 +104,6 @@ public class Categories_1 extends Fragment {
         mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
         mDatas.add(new Essay(testUserUrl,"Tyhj",testEssayUrl2,"关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
         mDatas.add(new Essay(testUserUrl,"Tyhj","http://img1.imgtn.bdimg.com/it/u=1792538780,2798164743&fm=21&gp=0.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201409/2014092008.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
-        mDatas.add(new Essay(testUserUrl,"Tyhj","http://pic.pp3.cn/uploads//201512/2015123007.jpg","关于你妹啊",getString(R.string.large_text),"15","16","17","2016","id","id"));
         mAdapter=new EssayAdpter(getActivity(),mDatas);
         rcyvPopularEssay.setAdapter(mAdapter);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);

@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Outline;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -27,6 +28,8 @@ import com.example.tyhj.sybfrm.Login;
 import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.info.Essay;
 import com.example.tyhj.sybfrm.info.UserInfo;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +63,8 @@ public class MyFunction {
 
     public static UserInfo userInfo;
 
+    public static Essay essay;
+
     private static boolean istour=true;
     private static UserInfo userInfo1;
 
@@ -77,6 +82,51 @@ public class MyFunction {
 
     public static void setUserInfo(UserInfo userInfo) {
         MyFunction.userInfo = userInfo;
+    }
+
+    public static String getURL() {
+        return URL;
+    }
+
+    public static void setURL(String URL) {
+        MyFunction.URL = URL;
+    }
+
+    public static Essay getEssay() {
+        return essay;
+    }
+
+    public static void setEssay(Essay essay) {
+        MyFunction.essay = essay;
+    }
+
+    //展示图片的设置
+    public static DisplayImageOptions getOption(){
+        return new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_image)
+                .showImageOnFail(R.mipmap.girl)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+    }
+    //Url转Drawable
+    public static Drawable loadImageFromNetwork(String imageUrl) {
+        Drawable drawable = null;
+        try {
+            // 可以在这里通过文件名来判断，是否本地有此图片
+            drawable = Drawable.createFromStream(
+                    new URL(imageUrl).openStream(), "image.jpg");
+        } catch (IOException e) {
+            Log.d("test", e.getMessage());
+        }
+        if (drawable == null) {
+            Log.d("test", "null drawable");
+        } else {
+            Log.d("test", "not null drawable");
+        }
+        return drawable ;
     }
 
     //是否有网络
@@ -326,7 +376,7 @@ public class MyFunction {
         SharedPreferences sharedPreferences = context.getSharedPreferences("saveLogin", MODE_PRIVATE);
         try {
             HttpURLConnection conn = null;
-            String url = "http://139.129.24.151:5000/u/query";
+            String url = URL+"/u/query";
             URL mURL = new URL(url);
             conn = (HttpURLConnection) mURL.openConnection();
             conn.setRequestMethod("POST");
@@ -369,7 +419,7 @@ public class MyFunction {
     public static UserInfo getUserInfo(String id) throws JSONException {
         try {
             HttpURLConnection conn = null;
-            String url = "http://139.129.24.151:5000/u/query";
+            String url = URL+"/u/query";
             URL mURL = new URL(url);
             conn = (HttpURLConnection) mURL.openConnection();
             conn.setRequestMethod("POST");
@@ -409,7 +459,7 @@ public class MyFunction {
     //获取文章
     public static String[] getEssayId(int type){
         HttpURLConnection conn = null;
-        String url = "http://139.129.24.151:5000/t/display";
+        String url = URL+"/t/display";
         URL mURL = null;
         try {
             mURL = new URL(url);

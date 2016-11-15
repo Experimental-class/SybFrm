@@ -103,7 +103,7 @@ String msg=null;
 
         try {
             HttpURLConnection conn = null;
-            String url = "http://139.129.24.151:5000/sign_up";
+            String url = getString(R.string.url)+"/sign_up";
             URL mURL = new URL(url);
             conn = (HttpURLConnection) mURL.openConnection();
             conn.setRequestMethod("POST");

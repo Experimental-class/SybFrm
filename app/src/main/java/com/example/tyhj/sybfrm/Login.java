@@ -54,6 +54,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyFunction.setURL(getString(R.string.url));
         if(MyFunction.canLog(this)){
             MyFunction.setIstour(false);
             if(MyFunction.isIntenet(this)){
@@ -122,7 +123,7 @@ public class Login extends AppCompatActivity {
     public void doPost(String name ,String password){
         try {
             HttpURLConnection conn = null;
-            String url = "http://139.129.24.151:5000/sign_in";
+            String url = getString(R.string.url)+"/sign_in";
             URL mURL = new URL(url);
             conn = (HttpURLConnection) mURL.openConnection();
             conn.setRequestMethod("POST");

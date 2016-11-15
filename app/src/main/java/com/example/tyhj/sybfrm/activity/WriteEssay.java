@@ -172,7 +172,7 @@ public class WriteEssay extends AppCompatActivity {
 
         try {
             HttpURLConnection conn = null;
-            String url = "http://139.129.24.151:5000/t/add";
+            String url = getString(R.string.url)+"/t/add";
             URL mURL = new URL(url);
             conn = (HttpURLConnection) mURL.openConnection();
             conn.setRequestMethod("POST");
