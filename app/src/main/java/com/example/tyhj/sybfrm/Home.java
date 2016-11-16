@@ -17,6 +17,7 @@ import com.avos.avoscloud.AVOSCloud;
 import com.example.tyhj.sybfrm.fragement.Categories;
 import com.example.tyhj.sybfrm.fragement.Message;
 import com.example.tyhj.sybfrm.fragement.More;
+import com.example.tyhj.sybfrm.fragement.More_;
 import com.example.tyhj.sybfrm.fragement.Popular;
 import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 
@@ -37,7 +38,7 @@ import custom.ShowButton;
     Popular popular;
     Categories categories;
     Message message;
-    More more;
+    More_ more;
     View viewBottombar;
     Animation animation_up,animation_down;
     boolean ifAnimation=true;
@@ -92,7 +93,7 @@ import custom.ShowButton;
                     case 2:
                         return message=new Message();
                     case 3:
-                        return more=new More();
+                        return more=new More_();
                 }
                 return null;
             }

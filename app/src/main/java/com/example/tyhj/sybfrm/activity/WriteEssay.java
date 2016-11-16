@@ -226,8 +226,10 @@ public class WriteEssay extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
+                getDate();
+                File file=new File(path,date);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                 startActivityForResult(intent, TAKE_PHOTO);
             }
         });
@@ -251,14 +253,10 @@ public class WriteEssay extends AppCompatActivity {
         switch (requestCode) {
             //这是从相机返回的数据
             case TAKE_PHOTO:
-                getDate();
                 if (resultCode == WriteEssay.this.RESULT_OK) {
-                    if (data != null) {
-                        imageUri = data.getData();
-                    }
-                    String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
-                    File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                    MyFunction.ImgCompress(path_pre, newFile);
+                    File file=new File(path,date);
+                    File newFile = new File(path, date);
+                    MyFunction.ImgCompress(file.getAbsolutePath(), newFile,100);
                     cropPhoto(Uri.fromFile(newFile));
                 }
                 break;
@@ -271,7 +269,7 @@ public class WriteEssay extends AppCompatActivity {
                     }
                     String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
                     File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                    MyFunction.ImgCompress(path_pre, newFile);
+                    MyFunction.ImgCompress(path_pre, newFile,100);
                     cropPhoto(Uri.fromFile(newFile));
                 }
                 break;
@@ -280,7 +278,7 @@ public class WriteEssay extends AppCompatActivity {
                 if (resultCode == WriteEssay.this.RESULT_OK) {
                     final String fileName = path + "/" + date;
                     File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                    MyFunction.ImgCompress(fileName, newFile);
+                    MyFunction.ImgCompress(fileName, newFile,100);
 
                     try {
                         if (!MyFunction.isIntenet(WriteEssay.this))

@@ -22,6 +22,7 @@ import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.example.tyhj.sybfrm.Login;
@@ -66,6 +67,7 @@ public class MyFunction {
     public static Essay essay;
 
     private static boolean istour=true;
+
     private static UserInfo userInfo1;
 
     public static boolean istour() {
@@ -232,6 +234,7 @@ public class MyFunction {
         editor.putBoolean("canLogin", true);
         editor.commit();
         MyFunction.setUserInfo(userInfo);
+        Log.e("保存了的",userInfo.toString());
     }
     //获取本地用户信息到全局变量
     public static void getInitInformation(Context context){
@@ -245,11 +248,10 @@ public class MyFunction {
                 sharedPreferences.getString("reputation",null),
                 sharedPreferences.getString("blog",null),
                 sharedPreferences.getString("github",null)
-
         ));
         sharedPreferences = context.getSharedPreferences("savePas", MODE_PRIVATE);
         MyFunction.getUserInfo().setPassword(sharedPreferences.getString("pas",null));
-        Log.e("本地信息",sharedPreferences.getString("name","没有"+sharedPreferences.getString("pas",null)));
+        //Log.e("本地信息",sharedPreferences.getString("name","没有"+sharedPreferences.getString("pas",null)));
     }
     //是否可以登录
     public static boolean canLog(Context context){
@@ -324,7 +326,7 @@ public class MyFunction {
     }
 
     //图片压缩
-    public static void ImgCompress(String filePath,File newFile) {
+    public static void ImgCompress(String filePath,File newFile,int kb) {
         int imageMg=100;
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -336,7 +338,7 @@ public class MyFunction {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, imageMg, baos);
         //如果文件大于100KB就进行质量压缩，每次压缩比例增加百分之五
-        while (baos.toByteArray().length / 1024 > IMAGE_SIZE&&imageMg>50){
+        while (baos.toByteArray().length / 1024 > kb&&imageMg>50){
             baos.reset();
             imageMg-=5;
             bitmap.compress(Bitmap.CompressFormat.JPEG, imageMg, baos);
@@ -383,7 +385,8 @@ public class MyFunction {
             conn.setReadTimeout(5000);
             conn.setConnectTimeout(10000);
             conn.setDoOutput(true);
-            String data =  "u_id=" + sharedPreferences.getString("id",null);
+            String id=sharedPreferences.getString("id",null);
+            String data =  "u_id=" +id;
             OutputStream out = conn.getOutputStream();
             out.write(data.getBytes());
             out.flush();
@@ -395,9 +398,10 @@ public class MyFunction {
                 JSONObject jsonObject=new JSONObject(state);
             if(jsonObject.getInt("code")==1){
                 //Log.e("Tag",state);
+                String headImage=MyFunction.getUserHeadImage(id);
                 MyFunction.saveUserInfo(context,new UserInfo(
-                        jsonObject.getString("u_id"),
-                        "url",
+                        id,
+                        headImage,
                         jsonObject.getString("u_name"),
                         jsonObject.getString("u_email"),
                         jsonObject.getString("u_intro"),
@@ -413,7 +417,6 @@ public class MyFunction {
         } catch (Exception e) {
             return false;
         }
-
     }
     //查询用户信息
     public static UserInfo getUserInfo(String id) throws JSONException {
@@ -439,7 +442,7 @@ public class MyFunction {
                 if(jsonObject.getInt("code")==1){
                     userInfo1 = new UserInfo(
                             id,
-                            "url",
+                            MyFunction.getUserHeadImage(id),
                             jsonObject.getString("u_name"),
                             jsonObject.getString("u_email"),
                             jsonObject.getString("u_intro"),
@@ -560,16 +563,33 @@ public class MyFunction {
     }
     //获取用户头像
     public static String getUserHeadImage(String id){
+        AVQuery<AVObject> query=new AVQuery<>("HeadImage");
+        query.whereEqualTo("userId",id);
+        try {
+            AVObject object= query.getFirst();
+            //Log.e("头像",object.getAVFile("headImage").getUrl()+" ");
+            if(object!=null)
+                return object.getAVFile("headImage").getUrl();
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    //修改用户头像
+    public static void setUserHeadImage(String id,AVFile file){
         AVQuery<AVObject> query=new AVQuery<>("HeadImage");
         query.whereEqualTo("userId",id);
         try {
             AVObject object= query.getFirst();
             if(object!=null)
-            return object.getAVFile("headImage").getUrl();
+                object.delete();
+            AVObject avObject = new AVObject("HeadImage");
+            avObject.put("userId",id);
+            avObject.put("headImage",file);
+            avObject.save();
         } catch (AVException e) {
             e.printStackTrace();
         }
-        return null;
     }
 }

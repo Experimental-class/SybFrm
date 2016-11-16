@@ -10,15 +10,26 @@
     tools:context="com.example.tyhj.sybfrm.SetUserInfo">
 
     <LinearLayout
+        android:paddingTop="25dip"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:elevation="4sp">
+        android:elevation="4dp">
+
+        <ImageButton
+            android:layout_gravity="center_vertical"
+            android:id="@+id/iv_back"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back_24dp"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_marginTop="25dip"
+
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:text="个人信息"
@@ -26,55 +37,9 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-
-    <android.support.v7.widget.CardView
-        app:cardElevation="1dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:cardCornerRadius="1dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/iv_userHeadImage"
-                android:layout_width="65dp"
-                android:layout_height="65dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_userName"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/tv_userSignature"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="查看已发表文章或问题" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         app:cardElevation="1dp">
 
         <LinearLayout
@@ -83,35 +48,38 @@
             android:orientation="vertical">
 
             <LinearLayout
-                style="@style/Widget.AppCompat.Button.Borderless"
+                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_id_24dp" />
+                    android:id="@+id/iv_userHeadImage"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="ID: " />
-
-                <TextView
-                    android:id="@+id/tvId"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="3"
-                    android:gravity="center_vertical"
-                    android:text="tyhj#5233" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_userName"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_userSignature"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="查看已发表文章或问题" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -129,15 +97,10 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_name_24dp" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="昵称:" />
@@ -171,15 +134,10 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_signature" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="个性签名:" />
@@ -212,15 +170,10 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_email_24dp" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="邮箱:" />
@@ -250,15 +203,10 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_reputation" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="声望值:" />
@@ -288,15 +236,10 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_blog" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="博客:" />
@@ -329,18 +272,14 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_github" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="github:" />
+                    android:text="github:"
+                    android:id="@+id/textView2" />
 
                 <EditText
                     android:id="@+id/et_github"

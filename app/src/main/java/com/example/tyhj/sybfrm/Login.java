@@ -100,8 +100,7 @@ public class Login extends AppCompatActivity {
         String password=etUserPassword.getText().toString().trim();
         if(id.equals("")&&password.equals("")){
             Toast.makeText(Login.this,"以游客身份登陆",Toast.LENGTH_SHORT).show();
-            MyFunction.setUserInfo(new UserInfo("5233",getString(R.string.defaultHeadImage),"tour#5233","null",getString(R.string.intro),"0","null","null"));
-            finishActivity();
+            savaTourInfo();
         }else {
             Snackbar.make(btnLogin, "登陆中", Snackbar.LENGTH_INDEFINITE).show();
             doPost(id, password);
@@ -145,7 +144,7 @@ public class Login extends AppCompatActivity {
                     Log.i("TAG",state);
                     MyFunction.saveUserInfo(Login.this,new UserInfo(
                             jsonObject.getString("u_id"),
-                            "url",
+                            MyFunction.getUserHeadImage(jsonObject.getString("u_id")),
                             jsonObject.getString("u_name"),
                             jsonObject.getString("u_email"),
                             jsonObject.getString("u_intro"),
@@ -169,5 +168,11 @@ public class Login extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Background
+    void savaTourInfo(){
+        finishActivity();
+        MyFunction.setUserInfo(new UserInfo("5233",MyFunction.getUserHeadImage("5233"),"tour#5233","null",getString(R.string.intro),"0","null","null"));
     }
 }

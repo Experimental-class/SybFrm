@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.tyhj.sybfrm.Adpter.EssayAdpter;
 import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
@@ -118,7 +119,7 @@ public class Popular extends Fragment {
             @Override
             public void onClick(View v) {
                 if(MyFunction.istour()){
-                    Snackbar.make(fab_addEssay,"游客没有该权限",Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"游客没有该权限",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -130,7 +131,7 @@ public class Popular extends Fragment {
             @Override
             public void onClick(View v) {
                 if(MyFunction.istour()){
-                    Snackbar.make(fab_addEssay,"游客没有该权限",Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"游客没有该权限",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 startActivity(new Intent(getActivity(), WriteEssay_.class).putExtra("what",false));
