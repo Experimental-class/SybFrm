@@ -32,12 +32,6 @@ public class Msg_2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_msg_2, null);
-        textView= (TextView) view.findViewById(R.id.textView);
-        try {
-            RichText.fromMarkdown(MyFunction.readToBuffer(R.raw.markdown,getActivity())).into(textView);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         return view;
     }

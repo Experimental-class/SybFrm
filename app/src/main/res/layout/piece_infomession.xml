@@ -4,284 +4,362 @@
     android:background="@color/bggray"
     android:orientation="vertical">
 
-<LinearLayout
-    android:background="@color/bgwhite"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
     <LinearLayout
-        android:id="@+id/ll_myEssay"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
+        android:background="@color/bgwhite"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:paddingBottom="15dp"
         android:orientation="horizontal"
-        android:padding="12dp">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_essay" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
+            android:textColor="@color/bule_black"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:text="关注  0"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="我的文章" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:background="@color/half_black"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:textColor="@color/bule_black"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:text="粉丝  1"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:background="@color/half_black"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:textColor="@color/bule_black"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:text="积分  100"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:background="@color/half_black"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
     <View
+        android:background="@color/bggray"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="50dp"
-        android:background="@color/bggray" />
+        android:layout_height="1dp"/>
 
     <LinearLayout
-        android:id="@+id/ll_myQes"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:background="@color/bgwhite"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="0dp">
 
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_questions" />
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/ll_myEssay"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="我的提问" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <ImageButton
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_essay" />
+
+            <TextView
+                android:layout_marginTop="3dp"
+                android:textColor="@color/bule_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="我的文章"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_myQes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <ImageButton
+                android:padding="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_questions" />
+
+            <TextView
+                android:layout_marginTop="3dp"
+                android:textColor="@color/bule_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="我的提问"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_myAnswer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <ImageButton
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_answers"
+                android:id="@+id/imageButton" />
+
+            <TextView
+                android:layout_marginTop="3dp"
+                android:textColor="@color/bule_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="我的回答"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_myEye"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_collected" />
+
+            <TextView
+                android:layout_marginTop="3dp"
+                android:textColor="@color/bule_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="我的关注"
+                android:textSize="11sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <View
+        android:background="@color/bggray"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="50dp"
-        android:background="@color/bggray" />
+        android:layout_height="1dp"/>
 
     <LinearLayout
-        android:id="@+id/ll_myAnswer"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="20dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp">
+        android:layout_height="wrap_content"
+        android:background="@color/bgwhite"
+        android:orientation="vertical">
 
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_answers" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
+        <LinearLayout
+            android:id="@+id/ll_changePas"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:text="我的回答" />
+            android:orientation="horizontal">
 
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="#00000000"
+                android:src="@drawable/ic_changepassword" />
+
+            <TextView
+                android:textColor="@color/half_black"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="修改密码" />
+
+            <ImageButton
+                android:background="#00000000"
+                android:src="@drawable/ic_arrow_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/ll_mySugesst"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="#00000000"
+                android:src="@drawable/ic_suggest" />
+
+            <TextView
+                android:textColor="@color/half_black"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="建议反馈" />
+            <ImageButton
+                android:background="#00000000"
+                android:src="@drawable/ic_arrow_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/ll_share"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="#00000000"
+                android:src="@drawable/ic_share" />
+
+            <TextView
+                android:textColor="@color/half_black"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="分享" />
+            <ImageButton
+                android:background="#00000000"
+                android:src="@drawable/ic_arrow_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/ll_about"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="#00000000"
+                android:src="@drawable/ic_about" />
+
+            <TextView
+                android:textColor="@color/half_black"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="关于我们" />
+            <ImageButton
+                android:background="#00000000"
+                android:src="@drawable/ic_arrow_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+        </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="50dp"
-        android:background="@color/bggray" />
-
     <LinearLayout
-        android:id="@+id/ll_changePas"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_changepassword" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="修改密码" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="50dp"
-        android:background="@color/bggray" />
-
-    <LinearLayout
-        android:id="@+id/ll_myReport"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_report" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="我的举报" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="50dp"
-        android:background="@color/bggray" />
-
-    <LinearLayout
-        android:id="@+id/ll_mySugesst"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_suggest" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="建议反馈" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="50dp"
-        android:background="@color/bggray" />
-
-    <LinearLayout
-        android:id="@+id/ll_share"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_share" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="分享" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="50dp"
-        android:background="@color/bggray" />
-
-    <LinearLayout
-        android:id="@+id/ll_about"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_about" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="关于" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="50dp"
-        android:background="@color/bggray" />
-
-    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:background="@color/bgwhite"
         android:id="@+id/ll_logout"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:paddingLeft="20dp">
 
         <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:background="#00000000"
             android:src="@drawable/ic_logout" />
 
         <TextView
-            android:layout_width="0dp"
+            android:textColor="@color/half_black"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
             android:text="退出" />
 
     </LinearLayout>
-</LinearLayout>
 
 </LinearLayout>

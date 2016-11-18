@@ -83,7 +83,7 @@ public class More extends Fragment implements View.OnClickListener {
         Picasso.with(getActivity())
                 .load(MyFunction.getUserInfo().getUrl())
                 .into(iv_backdrop);
-        Log.e("背景",MyFunction.getUserInfo().getUrl());
+        //Log.e("背景",MyFunction.getUserInfo().getUrl());
 
 
     }
@@ -111,14 +111,15 @@ public class More extends Fragment implements View.OnClickListener {
     //获取新信息
     @Background
     void getInfo() {
-        MyFunction.doPostToGetUserInfo(getActivity());
-        upDateInfo();
+        while (!MyFunction.doPostToGetUserInfo(getActivity())&&!MyFunction.istour()){
+
+        }
+            upDateInfo();
     }
 
     @Override
     public void onResume() {
         getInfo();
         super.onResume();
-        //Log.e("执行了","hhhhh");
     }
 }

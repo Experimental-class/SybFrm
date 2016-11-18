@@ -278,7 +278,7 @@ public class WriteEssay extends AppCompatActivity {
                 if (resultCode == WriteEssay.this.RESULT_OK) {
                     final String fileName = path + "/" + date;
                     File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                    MyFunction.ImgCompress(fileName, newFile,100);
+                    MyFunction.ImgCompress(fileName, newFile,300);
 
                     try {
                         if (!MyFunction.isIntenet(WriteEssay.this))

@@ -7,9 +7,9 @@ import java.io.Serializable;
  */
 
 public class Essay implements Serializable {
-    private String userHeadImageUrl,userName,essayImageUrl,essayTitle,essayBody,agree,collect,remark,time,e_id,u_id;
-
-    public Essay(String userHeadImageUrl, String userName, String essayImageUrl, String essayTitle, String essayBody, String agree, String collect, String remark, String time, String e_id,String u_id) {
+    private String userHeadImageUrl,userName,essayImageUrl,essayTitle,essayBody,agree,collect,time,e_id,u_id;
+    boolean isCollect,isZan;
+    public Essay(String userHeadImageUrl, String userName, String essayImageUrl, String essayTitle, String essayBody, String agree, String collect, Boolean isCollect,Boolean isZan, String time, String e_id,String u_id) {
         this.userHeadImageUrl = userHeadImageUrl;
         this.userName = userName;
         this.essayImageUrl = essayImageUrl;
@@ -17,10 +17,11 @@ public class Essay implements Serializable {
         this.essayBody = essayBody;
         this.agree = agree;
         this.collect = collect;
-        this.remark = remark;
         this.time = time;
         this.e_id = e_id;
         this.u_id=u_id;
+        this.isCollect=isCollect;
+        this.isZan=isZan;
     }
 
     public void setU_id(String u_id) {
@@ -103,12 +104,20 @@ public class Essay implements Serializable {
         this.collect = collect;
     }
 
-    public String getRemark() {
-        return remark;
+    public boolean isCollect() {
+        return isCollect;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setCollect(boolean collect) {
+        isCollect = collect;
+    }
+
+    public boolean isZan() {
+        return isZan;
+    }
+
+    public void setZan(boolean zan) {
+        isZan = zan;
     }
 
     @Override
@@ -121,10 +130,19 @@ public class Essay implements Serializable {
                 ", essayBody='" + essayBody + '\'' +
                 ", agree='" + agree + '\'' +
                 ", collect='" + collect + '\'' +
-                ", remark='" + remark + '\'' +
                 ", time='" + time + '\'' +
                 ", e_id='" + e_id + '\'' +
                 ", u_id='" + u_id + '\'' +
+                ", isCollect=" + isCollect +
+                ", isZan=" + isZan +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this.getE_id().equals( ((Essay)o).getE_id()))
+            return true;
+        else
+            return false;
     }
 }

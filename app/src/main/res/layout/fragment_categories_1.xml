@@ -5,10 +5,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.tyhj.sybfrm.fragement.categoriesfragement.Categories_1">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcyvPopularEssay"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcyvPopularEssay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </FrameLayout>

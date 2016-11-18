@@ -1,19 +1,29 @@
 package com.example.tyhj.sybfrm.Adpter;
 
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.activity.ShowEssay;
@@ -22,6 +32,8 @@ import com.example.tyhj.sybfrm.info.Essay;
 import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.List;
@@ -58,12 +70,16 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
         return essayViewHolder;
     }
 
+
+
     @Override
-    public void onBindViewHolder(EssayViewHolder holder, int position) {
+    public void onBindViewHolder(final EssayViewHolder holder, final int position) {
         holder.ivEssayImage.setVisibility(View.VISIBLE);
         String headImage=essayList.get(position).getUserHeadImageUrl();
-
+        final boolean[] turn = {false};
         final Essay essay=essayList.get(position);
+
+        //Log.e("Tag","赞"+essay.getAgree()+essay.isZan()+"    收藏"+essay.getCollect()+essay.isCollect());
 
         if (headImage != null)
             imageLoader.displayImage(headImage, holder.iv_userHeadImage, MyFunction.getOption());
@@ -81,6 +97,10 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
         else
             holder.ivEssayImage.setVisibility(View.GONE);
 
+        setIv_like(holder, essay);
+
+        setIv_Zan(holder, essay);
+
         holder.ivEssayImage.setClipToOutline(true);
         holder.ivEssayImage.setOutlineProvider(MyFunction.getOutline(false, 100, 8));
 
@@ -97,14 +117,119 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
         holder.tvEssayBody.setText(text);
         holder.tvEssayBody.setTypeface(typefaceYahei);
 
-        holder.tv_agree.setText(essay.getAgree() + "赞");
-        holder.tv_remark.setText(essay.getRemark() + "评论");
-        holder.tv_collect.setText(essay.getCollect() + "收藏");
+        final int[] likes = {Integer.parseInt(essay.getAgree()) + Integer.parseInt(essay.getCollect())};
+        holder.tsLikesCounter.setText(likes[0] +" ");
 
-        startAct(holder, essay);
+
+        final ObjectAnimator animator=(ObjectAnimator) AnimatorInflater.loadAnimator(context,
+                R.animator.likes);
+        final ObjectAnimator animator2=(ObjectAnimator) AnimatorInflater.loadAnimator(context,
+                R.animator.notlikes);
+
+        final AnimatedVectorDrawable[] mAnimatedVectorDrawable = new AnimatedVectorDrawable[1];
+
+
+        final Handler handler=new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case 1:
+                        setIv_Zan(holder,essay);
+                        if(essay.isZan())
+                            likes[0]++;
+                        else
+                            likes[0]--;
+                        holder.tsLikesCounter.setText(likes[0]+" ");
+                        break;
+                    case 2:
+                        if(essay.isCollect())
+                            likes[0]++;
+                        else
+                            likes[0]--;
+                        holder.tsLikesCounter.setText(likes[0]+" ");
+                        setIv_like(holder,essay);
+                        break;
+                }
+            }
+        };
+        holder.iv_collect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(essay.isCollect()){
+                    mAnimatedVectorDrawable[0] = (AnimatedVectorDrawable) context.
+                            getDrawable(R.drawable.essaynotcollect);
+                    likes[0]--;
+                    holder.tsLikesCounter.setText(likes[0]+" ");
+                    essay.setCollect(false);
+                }else {
+                    mAnimatedVectorDrawable[0] = (AnimatedVectorDrawable) context.
+                            getDrawable(R.drawable.essaycollect);
+                    likes[0]++;
+                    holder.tsLikesCounter.setText(likes[0]+" ");
+                    essay.setCollect(true);
+
+                }
+                if(!turn[0]){
+                    animator.setTarget(holder.iv_collect);
+                    animator.start();
+                }else {
+                    animator2.setTarget(holder.iv_collect);
+                    animator2.start();
+                }
+                holder.iv_collect.setImageDrawable(mAnimatedVectorDrawable[0]);
+                mAnimatedVectorDrawable[0].start();
+                turn[0] =!turn[0];
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if(!MyFunction.collectEsy(essay.getE_id(),essay.isCollect())) {
+                            essay.setCollect(!essay.isCollect());
+                            handler.sendEmptyMessage(2);
+                        }
+                    }
+                }).start();
+            }
+        });
+        setClick(holder, essay, likes, animator, animator2,mAnimatedVectorDrawable, handler);
     }
 
-    private void startAct(EssayViewHolder holder, final Serializable essay) {
+
+
+
+
+
+    //点击事件
+    private void setClick(final EssayViewHolder holder, final Essay essay, final int[] likes,
+                          final ObjectAnimator animator, final ObjectAnimator animator2,
+                          final AnimatedVectorDrawable[] mAnimatedVectorDrawable, final Handler handler) {
+        holder.iv_zan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(essay.isZan()){
+                    holder.iv_zan.setImageResource(R.drawable.zan);
+                    likes[0]--;
+                    holder.tsLikesCounter.setText(likes[0] +" ");
+                    essay.setZan(false);
+                } else {
+                    holder.iv_zan.setImageResource(R.drawable.zaned);
+                    likes[0]++;
+                    holder.tsLikesCounter.setText(likes[0] +" ");
+                    essay.setZan(true);
+                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!MyFunction.ZanEsy(essay.getE_id(),essay.isZan())){
+                            essay.setZan(!essay.isZan());
+                            handler.sendEmptyMessage(1);
+                        }
+
+                    }
+                }).start();
+            }
+        });
+
         holder.ivEssayImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,36 +240,7 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
                 context.startActivity(intent);
             }
         });
-        holder.iv_userHeadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ShowEssay_.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("essay", essay);
-                intent.putExtras(bundle);
-                context.startActivity(intent);
-            }
-        });
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ShowEssay_.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("essay", essay);
-                intent.putExtras(bundle);
-                context.startActivity(intent);
-            }
-        });
-        holder.tv_userName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ShowEssay_.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("essay", essay);
-                intent.putExtras(bundle);
-                context.startActivity(intent);
-            }
-        });
+
         holder.tvEssayBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +262,21 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
             }
         });
     }
+
+    private void setIv_like(EssayViewHolder holder, Essay essay) {
+        if(essay.isCollect())
+            holder.iv_collect.setImageResource(R.drawable.icmecollected);
+        else
+            holder.iv_collect.setImageResource(R.drawable.icmecollect);
+    }
+
+    private void setIv_Zan(EssayViewHolder holder, Essay essay) {
+        if(essay.isZan())
+            holder.iv_zan.setImageResource(R.drawable.zaned);
+        else
+            holder.iv_zan.setImageResource(R.drawable.zan);
+    }
+
 
     @Override
     public int getItemCount() {
@@ -193,8 +304,9 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
 
     class EssayViewHolder extends RecyclerView.ViewHolder {
         CardView cdvEssay;
-        ImageView iv_userHeadImage, ivEssayImage;
-        TextView tv_userName, tvEssayTitle, tvEssayBody, tv_agree, tv_remark, tv_collect;
+        ImageView iv_userHeadImage, ivEssayImage,iv_zan,iv_Left,iv_collect;
+        TextView tv_userName, tvEssayTitle, tvEssayBody;
+        TextSwitcher tsLikesCounter;
 
         public EssayViewHolder(View view) {
             super(view);
@@ -204,9 +316,19 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
             tv_userName = (TextView) view.findViewById(R.id.tv_userName);
             tvEssayTitle = (TextView) view.findViewById(R.id.tvEssayTitle);
             tvEssayBody = (TextView) view.findViewById(R.id.tvEssayBody);
-            tv_agree = (TextView) view.findViewById(R.id.tv_agree);
-            tv_remark = (TextView) view.findViewById(R.id.tv_remark);
-            tv_collect = (TextView) view.findViewById(R.id.tv_collect);
+            iv_zan= (ImageView) view.findViewById(R.id.iv_zan);
+            iv_Left= (ImageView) view.findViewById(R.id.iv_Left);
+            iv_collect= (ImageView) view.findViewById(R.id.iv_collect);
+            tsLikesCounter= (TextSwitcher) view.findViewById(R.id.tsLikesCounter);
+            tsLikesCounter.setFactory(new ViewSwitcher.ViewFactory() {
+                @Override
+                public View makeView() {
+                    TextView t = new TextView(context);
+                    t.setGravity(Gravity.CENTER);
+                    t.setTextColor(Color.parseColor("#2C5B84"));
+                    return t;
+                }
+            });
         }
     }
 
@@ -218,5 +340,7 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
+
+
 
 }

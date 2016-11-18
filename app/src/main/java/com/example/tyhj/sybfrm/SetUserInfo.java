@@ -47,6 +47,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static android.content.Intent.ACTION_GET_CONTENT;
 import static com.example.tyhj.sybfrm.activity.WriteEssay.PICK_PHOTO;
@@ -283,7 +284,11 @@ public class SetUserInfo extends AppCompatActivity {
                     }
                     String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
                     File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                    MyFunction.ImgCompress(path_pre, newFile, 1000);
+                    try {
+                        MyFunction.copyFile(new File(path_pre), newFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     cropPhoto(Uri.fromFile(newFile));
                 }
                 break;

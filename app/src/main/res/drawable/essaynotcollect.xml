@@ -1,0 +1,6 @@
+ <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+   android:drawable="@drawable/icmecollected" >
+     <target
+         android:name="tonotcollectessay"
+         android:animation="@animator/essaynotcollect" />
+ </animated-vector>

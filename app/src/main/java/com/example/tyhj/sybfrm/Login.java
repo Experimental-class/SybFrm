@@ -141,7 +141,7 @@ public class Login extends AppCompatActivity {
                 JSONObject jsonObject=new JSONObject(state);
                 if(jsonObject.getInt("code")==1){
                     snackBar("登陆成功",Snackbar.LENGTH_SHORT);
-                    Log.i("TAG",state);
+                    //Log.i("TAG",state);
                     MyFunction.saveUserInfo(Login.this,new UserInfo(
                             jsonObject.getString("u_id"),
                             MyFunction.getUserHeadImage(jsonObject.getString("u_id")),
@@ -166,13 +166,14 @@ public class Login extends AppCompatActivity {
                 Log.i("TAG", "访问失败" + responseCode);
             }
         } catch (Exception e) {
+            snackBar("后台很菜，服务器崩溃了，请稍后再试",Snackbar.LENGTH_SHORT);
             e.printStackTrace();
         }
     }
 
     @Background
     void savaTourInfo(){
-        finishActivity();
         MyFunction.setUserInfo(new UserInfo("5233",MyFunction.getUserHeadImage("5233"),"tour#5233","null",getString(R.string.intro),"0","null","null"));
+        finishActivity();
     }
 }
