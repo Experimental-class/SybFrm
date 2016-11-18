@@ -17,10 +17,12 @@ android {
     }
     defaultConfig {
         applicationId "com.example.tyhj.sybfrm"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled  true
     }
     buildTypes {
         release {
@@ -28,9 +30,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets.main{
+        jniLibs.srcDirs=['libs']
+    }
 }
-
-dependencies {
+repositories {
+    jcenter()
+    flatDir {
+        dirs 'libs'
+    }
+}
+dependencies{
     compile fileTree(include: ['*.jar'], dir: 'libs')
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
@@ -47,4 +57,5 @@ dependencies {
     // LeanCloud 基础包
     compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
     compile files('libs/universal-image-loader-1.9.5.jar')
+
 }

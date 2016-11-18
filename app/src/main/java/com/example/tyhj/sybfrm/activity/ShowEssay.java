@@ -1,5 +1,6 @@
 package com.example.tyhj.sybfrm.activity;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -23,14 +24,14 @@ import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
 
-import custom.mohuView.BlurredView;
+import custom.BlurUtil;
 
 @EActivity(R.layout.activity_show_essay)
 public class ShowEssay extends AppCompatActivity {
 
     Essay essay;
 
-    Drawable drawable;
+    Bitmap drawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class ShowEssay extends AppCompatActivity {
     @ViewById
     TextView tvEssayBody, tv_name, tv_signature;
     @ViewById
-    BlurredView BlurredView;
+    ImageView BlurredView2;
     @ViewById
     Toolbar maintoolbar;
     @ViewById
@@ -59,22 +60,23 @@ public class ShowEssay extends AppCompatActivity {
 
     @UiThread
     void getBlurredImg() {
+
         if (drawable != null)
-            BlurredView.setBlurredImg(drawable);
+            BlurredView2.setImageBitmap(BlurUtil.doBlur(drawable,10,15));
         else
-            BlurredView.setBlurredImg(getDrawable(R.mipmap.essay_bg));
+            BlurredView2.setImageResource(R.mipmap.essay_bg);
     }
 
 
     @Background
     void setBlurredImg() {
-        drawable=MyFunction.loadImageFromNetwork(essay.getEssayImageUrl());
+        drawable=MyFunction.url2Bitmap(essay.getEssayImageUrl());
         getBlurredImg();
     }
 
     @AfterViews
     void afterViews() {
-        BlurredView.setBlurredLevel(93);
+        //BlurredView.setBlurredLevel(93);
         setBlurredImg();
         maincollapsing.setTitle(essay.getEssayTitle() + "");
         iv_userHeadImage.setClipToOutline(true);

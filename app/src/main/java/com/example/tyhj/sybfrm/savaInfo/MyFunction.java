@@ -35,6 +35,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -48,6 +49,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -106,7 +108,7 @@ public class MyFunction {
     //展示图片的设置
     public static DisplayImageOptions getOption() {
         return new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_image)
+                .showImageOnLoading(R.mipmap.girl)
                 .showImageOnFail(R.mipmap.girl)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
@@ -133,6 +135,30 @@ public class MyFunction {
             Log.d("test", "not null drawable");
         }
         return drawable;
+    }
+
+    //Url转bitmap
+    public static Bitmap url2Bitmap(String url) {
+        Bitmap bm = null;
+        try {
+            URL iconUrl = new URL(url);
+            URLConnection conn = iconUrl.openConnection();
+            HttpURLConnection http = (HttpURLConnection) conn;
+
+            int length = http.getContentLength();
+
+            conn.connect();
+            // 获得图像的字符流
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is, length);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();// 关闭流
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bm;
     }
 
     //是否有网络

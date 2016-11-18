@@ -22,8 +22,8 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <custom.mohuView.BlurredView
-                android:id="@+id/BlurredView"
+            <ImageView
+                android:id="@+id/BlurredView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
