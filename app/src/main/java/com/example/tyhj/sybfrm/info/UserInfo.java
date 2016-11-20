@@ -1,10 +1,13 @@
 package com.example.tyhj.sybfrm.info;
 
+import java.io.Serializable;
+
 /**
  * Created by _Tyhj on 2016/8/3.
  */
-public class UserInfo {
+public class UserInfo implements Serializable{
     String id,url, name, email, signature,reputation,blog,github,password;
+    String tags[];
 
     @Override
     public String toString() {
@@ -98,5 +101,13 @@ public class UserInfo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 }

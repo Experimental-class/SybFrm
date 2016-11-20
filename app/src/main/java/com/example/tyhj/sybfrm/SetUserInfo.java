@@ -14,7 +14,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -34,6 +38,8 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
+import com.example.tyhj.sybfrm.Adpter.TagsAdpter;
 import com.example.tyhj.sybfrm.info.UserInfo;
 import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 import com.squareup.picasso.Picasso;
@@ -49,6 +55,8 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Intent.ACTION_GET_CONTENT;
 import static com.example.tyhj.sybfrm.activity.WriteEssay.PICK_PHOTO;
@@ -66,6 +74,13 @@ public class SetUserInfo extends AppCompatActivity {
     ContentResolver contentResolver;
     String path = Environment.getExternalStorageDirectory() + "/SybFrm";
     String fileName;
+    SimpleAdapter simpleAdapter;
+    List<String> tags = new ArrayList<>();
+
+    TagsAdpter tags_face,tags_back,tags_mobile,tags_data,tags_yun,tags_test,tags_view;
+
+    List<String> ls_face,ls_back,ls_mobile,ls_data,ls_yun,ls_test,ls_view;
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -73,6 +88,50 @@ public class SetUserInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         animation = AnimationUtils.loadAnimation(this, R.anim.bottombarup);
         contentResolver = getContentResolver();
+
+
+        String tag_face[]=getResources().getStringArray(R.array.tags_face);
+        if (tag_face!= null)
+            for (int i = 0; i < tag_face.length; i++) {
+                tags.add(tag_face[i]);
+            }
+        ls_face=new ArrayList<String>();
+        ls_test=new ArrayList<String>();
+        ls_data=new ArrayList<String>();
+        ls_mobile=new ArrayList<String>();
+        ls_back=new ArrayList<String>();
+        ls_view=new ArrayList<String>();
+        ls_yun=new ArrayList<String>();
+
+        String tag_back[]=getResources().getStringArray(R.array.tags_back);
+        String tag_mobile[]=getResources().getStringArray(R.array.tags_mobile);
+        String tag_data[]=getResources().getStringArray(R.array.tags_date);
+        String tag_yun[]=getResources().getStringArray(R.array.tags_yun);
+        String tag_test[]=getResources().getStringArray(R.array.tags_test);
+        String tag_view[]=getResources().getStringArray(R.array.tags_view);
+
+        for(int i=0;i<tag_back.length;i++){
+            ls_back.add(tag_back[i]);
+        }
+        for(int i=0;i<tag_data.length;i++){
+            ls_data.add(tag_data[i]);
+        }
+        for(int i=0;i<tag_face.length;i++){
+            ls_face.add(tag_face[i]);
+        }
+        for(int i=0;i<tag_mobile.length;i++){
+            ls_mobile.add(tag_mobile[i]);
+        }
+        for(int i=0;i<tag_test.length;i++){
+            ls_test.add(tag_test[i]);
+        }
+        for(int i=0;i<tag_view.length;i++){
+            ls_view.add(tag_view[i]);
+        }
+        for(int i=0;i<tag_yun.length;i++){
+            ls_yun.add(tag_yun[i]);
+        }
+
     }
 
     @ViewById
@@ -94,13 +153,16 @@ public class SetUserInfo extends AppCompatActivity {
     EditText et_name, et_Signature, et_blog, et_github;
 
     @ViewById
+    LinearLayout ll_tags;
+
+    @ViewById
     TextView tvEmail, tvReputation, tv_userName;
 
     @ViewById
     RecyclerView rcyv_tags;
 
-
-
+    @ViewById
+    RecyclerView rcyv_face,rcyv_back,rcyv_moblie,rcyv_data,rcyv_yun,rcyv_test,rcyv_view;
 
     @Click(R.id.iv_userHeadImage)
     void changeHeadImage() {
@@ -115,13 +177,9 @@ public class SetUserInfo extends AppCompatActivity {
         savaToCloud(headImagefile);
     }
 
-    @AfterViews
-    void afterViews() {
-        iv_userHeadImage.setClipToOutline(true);
-        iv_userHeadImage.setOutlineProvider(MyFunction.getOutline(true, 10, 0));
-        getImageUrl();
-        initView();
-        clik();
+    @Click(R.id.iv_close)
+    void close(){
+        ll_tags.setVisibility(View.GONE);
     }
 
     @UiThread
@@ -162,6 +220,41 @@ public class SetUserInfo extends AppCompatActivity {
         this.finish();
     }
 
+    @Click(R.id.ll_setTags)
+    void chose(){
+        ll_tags.setVisibility(View.VISIBLE);
+    }
+
+    @AfterViews
+    void afterViews() {
+        iv_userHeadImage.setClipToOutline(true);
+        iv_userHeadImage.setOutlineProvider(MyFunction.getOutline(true, 10, 0));
+        getImageUrl();
+        initView();
+        clik();
+        initRecycleVies();
+        simpleAdapter = new SimpleAdapter(SetUserInfo.this, tags);
+        rcyv_tags.setAdapter(simpleAdapter);
+        StaggeredGridLayoutManager staggeredGridLayoutManager=new StaggeredGridLayoutManager(tags.size()/4+1,StaggeredGridLayoutManager.HORIZONTAL);
+        rcyv_tags.setLayoutManager(staggeredGridLayoutManager);
+        rcyv_tags.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void initRecycleVies() {
+        tags_face=new TagsAdpter(this,ls_face,1);
+        tags_back=new TagsAdpter(this,ls_back,2);
+        tags_mobile=new TagsAdpter(this,ls_mobile,3);
+        tags_data=new TagsAdpter(this,ls_data,4);
+        tags_yun=new TagsAdpter(this,ls_yun,5);
+        tags_test=new TagsAdpter(this,ls_test,6);
+        tags_view=new TagsAdpter(this,ls_view,7);
+        RecyclerView rcyv[]={rcyv_face,rcyv_back,rcyv_moblie,rcyv_data,rcyv_yun,rcyv_test,rcyv_view};
+        TagsAdpter adpter[]=new TagsAdpter[]{tags_face,tags_back,tags_mobile,tags_data,tags_yun,tags_test,tags_view};
+        for(int i=0;i<rcyv.length;i++){
+            rcyv[i].setAdapter(adpter[i]);
+            rcyv[i].setLayoutManager(new GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false));
+        }
+    }
 
     private void initView() {
         UserInfo userInfo = MyFunction.getUserInfo();
@@ -351,11 +444,13 @@ public class SetUserInfo extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        if (!MyFunction.istour() && ifMessageChange && cdvIfSave.getVisibility() != View.VISIBLE) {
-            cdvIfSave.startAnimation(animation);
-        } else
-            super.onBackPressed();
+        if (ll_tags.getVisibility() == View.VISIBLE)
+            ll_tags.setVisibility(View.GONE);
+        else {
+            if (!MyFunction.istour() && ifMessageChange && cdvIfSave.getVisibility() != View.VISIBLE) {
+                cdvIfSave.startAnimation(animation);
+            } else
+                super.onBackPressed();
+        }
     }
-
 }

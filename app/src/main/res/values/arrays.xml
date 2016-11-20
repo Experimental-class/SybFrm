@@ -60,7 +60,7 @@
         <item>Go</item>
         <item>C#</item>
     </string-array>
-    <string-array name="tag_mobile">
+    <string-array name="tags_mobile">
         <item>Android</item>
         <item>iOS</item>
         <item>Unity 3D</item>

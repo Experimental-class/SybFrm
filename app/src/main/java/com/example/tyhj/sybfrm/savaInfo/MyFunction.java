@@ -59,7 +59,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class MyFunction {
-    static String TAG="Myfuction";
+    static String TAG = "Myfuction";
 
     private static String URL = "http://139.129.24.151:5000";
 
@@ -119,7 +119,7 @@ public class MyFunction {
 
     //Url转Drawable
     public static Drawable loadImageFromNetwork(String imageUrl) {
-        if(imageUrl==null)
+        if (imageUrl == null)
             return null;
         Drawable drawable = null;
         try {
@@ -154,8 +154,7 @@ public class MyFunction {
             bm = BitmapFactory.decodeStream(bis);
             bis.close();
             is.close();// 关闭流
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return bm;
@@ -254,51 +253,35 @@ public class MyFunction {
         return buffer.toString();
     }
 
-    //重新设置用户信息并保存用户信息到本地数据库和全局变量
-    public static void saveUserInfo(Context context, UserInfo userInfo) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("saveLogin", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
-        editor.putString("id", userInfo.getId());
-        editor.putString("name", userInfo.getName());
-        editor.putString("signature", userInfo.getSignature());
-        editor.putString("email", userInfo.getEmail());
-        editor.putString("headImage", userInfo.getUrl());
-        editor.putString("reputation", userInfo.getReputation());
-        editor.putString("blog", userInfo.getBlog());
-        editor.putString("github", userInfo.getGithub());
-        editor.putBoolean("canLogin", true);
-        editor.commit();
-        sharedPreferences = context.getSharedPreferences("savePas", MODE_PRIVATE);
-        userInfo.setPassword(sharedPreferences.getString("pas", null));
-        MyFunction.setUserInfo(userInfo);
-        //Log.e("保存了的", userInfo.toString());
-    }
-
-    //获取本地用户信息到全局变量
-    public static void getInitInformation(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("saveLogin", MODE_PRIVATE);
-        MyFunction.setUserInfo(new UserInfo(
-                sharedPreferences.getString("id", null),
-                sharedPreferences.getString("headImage", null),
-                sharedPreferences.getString("name", null),
-                sharedPreferences.getString("email", null),
-                sharedPreferences.getString("signature", null),
-                sharedPreferences.getString("reputation", null),
-                sharedPreferences.getString("blog", null),
-                sharedPreferences.getString("github", null)
-        ));
-        sharedPreferences = context.getSharedPreferences("savePas", MODE_PRIVATE);
-        MyFunction.getUserInfo().setPassword(sharedPreferences.getString("pas", null));
-        //Log.e("本地信息",sharedPreferences.getString("name","没有"+sharedPreferences.getString("pas",null)));
-    }
-
-    //是否可以登录
-    public static boolean canLog(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("saveLogin", MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("canLogin", false))
-            return true;
-        else
-            return false;
+    //用户登录
+    public static String Login(String data, String pas, Context context) {
+        JSONObject jsonObject = getJson(data, URL + "/sign_in");
+        if (jsonObject != null) {
+            try {
+                if (jsonObject.getInt("code") == 1) {
+                    UserInfo userInfo = new UserInfo(
+                            jsonObject.getString("u_id"),
+                            MyFunction.getUserHeadImage(jsonObject.getString("u_id")),
+                            jsonObject.getString("u_name"),
+                            jsonObject.getString("u_email"),
+                            jsonObject.getString("u_intro"),
+                            jsonObject.getString("u_reputation"),
+                            jsonObject.getString("u_blog"),
+                            jsonObject.getString("u_github"));
+                    userInfo.setPassword(pas);
+                    String tags[] = jsonObject.getString("u_tags").split(",", 0);
+                    userInfo.setTags(tags);
+                    new SharedData(context).saveUser(userInfo);
+                    MyFunction.setUserInfo(userInfo);
+                    return null;
+                } else {
+                    return jsonObject.getString("codeState");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return "后台很菜，服务器崩溃了，请稍后再试";
     }
 
     //保存文章到本地
@@ -419,33 +402,17 @@ public class MyFunction {
 
     //获取用户信息
     public static boolean doPostToGetUserInfo(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("saveLogin", MODE_PRIVATE);
         try {
-            HttpURLConnection conn = null;
             String url = URL + "/u/query";
-            URL mURL = new URL(url);
-            conn = (HttpURLConnection) mURL.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setReadTimeout(5000);
-            conn.setConnectTimeout(10000);
-            conn.setDoOutput(true);
-            String id = sharedPreferences.getString("id", null);
+            String id=MyFunction.getUserInfo().getId();
             String data = "u_id=" + id;
-            OutputStream out = conn.getOutputStream();
-            out.write(data.getBytes());
-            out.flush();
-            out.close();
-            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
-            if (responseCode == 200) {
-                InputStream is = conn.getInputStream();
-                String state = getStringFromInputStream(is);
-                JSONObject jsonObject = new JSONObject(state);
-                if (jsonObject.getInt("code") == 1) {
+            JSONObject jsonObject=getJson(data,url);
+                if (jsonObject!=null&&jsonObject.getInt("code") == 1) {
                     //Log.e("Tag",state);
                     String headImage = MyFunction.getUserHeadImage(id);
-                    if(headImage==null)
+                    if (headImage == null)
                         return false;
-                    MyFunction.saveUserInfo(context, new UserInfo(
+                    UserInfo userInfo = new UserInfo(
                             id,
                             headImage,
                             jsonObject.getString("u_name"),
@@ -453,12 +420,15 @@ public class MyFunction {
                             jsonObject.getString("u_intro"),
                             jsonObject.getString("u_reputation"),
                             jsonObject.getString("u_blog"),
-                            jsonObject.getString("u_github")));
+                            jsonObject.getString("u_github"));
+                    userInfo.setPassword(getUserInfo().getPassword());
+                    String tags[] = jsonObject.getString("u_tags").split(",", 0);
+                    userInfo.setTags(tags);
+                    new SharedData(context).saveUser(userInfo);
                     return true;
                 } else {
                     //Log.e("Tag",jsonObject.getString("codeState"));
                 }
-            }
             return false;
         } catch (Exception e) {
             return false;
@@ -509,43 +479,38 @@ public class MyFunction {
 
     //获取文章
     public static String[] getEssayId(int type) {
-        HttpURLConnection conn = null;
         String url = URL + "/t/display";
-        URL mURL = null;
-        try {
-            mURL = new URL(url);
-            conn = (HttpURLConnection) mURL.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setReadTimeout(5000);
-            conn.setConnectTimeout(10000);
-            conn.setDoOutput(true);
-            OutputStream out = conn.getOutputStream();
-            String data = "show_count=" + 20;
-            out.write(data.getBytes());
-            out.flush();
-            out.close();
-            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
-            if (responseCode == 200) {
-                InputStream is = conn.getInputStream();
-                String state = getStringFromInputStream(is);
-                JSONObject jsonObject = new JSONObject(state);
-                if (jsonObject.getInt("code") == 1) {
-                    String str = jsonObject.getString("t_ids");
-                    String[] strings = str.split("&");
-                    String[] strings1 = strings[0].split(",");
-                    String[] strings2 = strings[1].split(",");
-                    //Log.i("TAG_文章信息",state+strings1[0]);
-                    if (type == 0)
-                        return strings1;
-                    else
-                        return strings2;
-                }
+        String data="";
+        String tags[]=MyFunction.getUserInfo().getTags();
+        if(type==2) {
+            for(int i=0;i<tags.length;i++){
+                if(i!=tags.length-1)
+                    data=data+tags[i]+",";
+                else
+                    data=data+tags[i];
             }
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            data = "t_tags=" +data+ "&show_count=" + 20;
         }
+        else
+            data = "show_count=" + 20;
+        getJson(data, url);
+        JSONObject jsonObject = getJson(data, url);
+        try {
+            if (jsonObject!=null&&jsonObject.getInt("code") == 1) {
+                String str = jsonObject.getString("t_ids");
+                String[] strings = str.split("&");
+                String[] strings1 = strings[0].split(",");
+                String[] strings2 = strings[1].split(",");
+                //Log.i("TAG_文章信息",state+strings1[0]);
+                if (type == 0)
+                    return strings1;
+                else
+                    return strings2;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     //获取信息
@@ -569,11 +534,8 @@ public class MyFunction {
                 String state = getStringFromInputStream(is);
                 //Log.e("Tag",state);
                 JSONObject jsonObject = new JSONObject(state);
-                if (jsonObject.getInt("code") == 1) {
+                if (jsonObject != null)
                     return jsonObject;
-                } else {
-                    Log.e("Tag", jsonObject.getString("codeState")+data+"  Url："+url);
-                }
             }
             return null;
         } catch (Exception e) {
@@ -585,13 +547,13 @@ public class MyFunction {
     //获取文章
     public static Essay getEssay(String id) throws JSONException {
         String url = URL + "/t/query";
-        JSONObject json = getJson("t_id="+id, url);
+        JSONObject json = getJson("t_id=" + id, url);
         if (json == null)
             return null;
         else {
             String str = json.getString("t_text");
             String essayUrl = null;
-            if (str.length() > 10&&str.contains("![](http://"))
+            if (str.length() > 10 && str.contains("![](http://"))
                 essayUrl = str.substring(str.indexOf("![](http://") + 4, str.indexOf(".JPEG)") + 5);
             //Log.e("TAg",str+"xxxxxx"+essayUrl+"");
             Essay essay = new Essay(
@@ -602,8 +564,8 @@ public class MyFunction {
                     json.getString("t_text"),
                     json.getString("t_like"),
                     json.getString("t_star"),
-                    ifCollectOrCommand(0,id),
-                    ifCollectOrCommand(1,id),
+                    ifCollectOrCommand(0, id),
+                    ifCollectOrCommand(1, id),
                     json.getString("t_date_latest"),
                     json.getString("t_id"),
                     json.getString("u_id")
@@ -667,50 +629,49 @@ public class MyFunction {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }else
-            Log.e(TAG,"Not拿到了返回值");
+        } else
+            Log.e(TAG, "Not拿到了返回值");
         return false;
     }
 
     //收藏文章
     public static boolean collectEsy(String t_id, boolean is) {
-        int what=0;
-        if(is)
-            what=1;
+        int what = 0;
+        if (is)
+            what = 1;
         JSONObject object = getJson("u_id=" + MyFunction.getUserInfo().getId() + "&u_psw="
                 + MyFunction.getUserInfo().getPassword() + "&t_id=" + t_id + "&u_act=" + what, URL + "/t/star");
-        if(object!=null){
+        if (object != null) {
             return true;
-        }
-        else
+        } else
             return false;
     }
 
     //推荐文章
-    public static boolean ZanEsy(String t_id,boolean is) {
-        int what=0;
-        if(is)
-            what=1;
+    public static boolean ZanEsy(String t_id, boolean is) {
+        int what = 0;
+        if (is)
+            what = 1;
         JSONObject object = getJson("u_id=" + MyFunction.getUserInfo().getId() + "&u_psw="
                 + MyFunction.getUserInfo().getPassword() + "&t_id=" + t_id + "&u_act=" + what, URL + "/t/recommend");
-        if(object!=null)
+        if (object != null)
             return true;
         else
             return false;
     }
 
     //发表文章评论
-    public static boolean remarkEsy(String t_id,int what,String mark){
-        String type="";
-        if(what==0)
-            type="article";
-        else if(what==1)
-            type="question";
-        else if(what==2)
-            type="answer";
+    public static boolean remarkEsy(String t_id, int what, String mark) {
+        String type = "";
+        if (what == 0)
+            type = "article";
+        else if (what == 1)
+            type = "question";
+        else if (what == 2)
+            type = "answer";
         JSONObject object = getJson("u_id=" + MyFunction.getUserInfo().getId() + "&u_psw="
-                + MyFunction.getUserInfo().getPassword() +"&ec_type="+type+ "&ec_id=" + t_id + "&c_text=" + mark, URL + "/c/add");
-        if(object!=null)
+                + MyFunction.getUserInfo().getPassword() + "&ec_type=" + type + "&ec_id=" + t_id + "&c_text=" + mark, URL + "/c/add");
+        if (object != null)
             return true;
         else
             return false;

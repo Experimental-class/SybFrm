@@ -34,7 +34,9 @@
             android:name=".Home_"
             android:windowSoftInputMode="stateHidden|adjustUnspecified" />
         <activity android:name=".Allquestions_" />
-        <activity android:name=".SetUserInfo_" />
+        <activity android:name=".SetUserInfo_"
+            android:windowSoftInputMode="stateHidden"
+            />
         <activity android:name=".activity.ShowEssay_" />
         <activity android:name=".activity.WriteEssay_"/>
     </application>

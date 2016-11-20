@@ -22,4 +22,6 @@
     <color name="text_like_counter">#2b5a83</color>
     <color name="fab_color_pressed">#01bcd5</color>
     <color name="yellow_green">#CDDC39</color>
+    <color name="gray2">#cccfd4</color>
+    <color name="bg2">#f6fafb</color>
 </resources>

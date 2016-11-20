@@ -16,6 +16,7 @@ import com.example.tyhj.sybfrm.info.UserInfo;
 import com.example.tyhj.sybfrm.initlogin.ChangePassword_;
 import com.example.tyhj.sybfrm.initlogin.Signup_;
 import com.example.tyhj.sybfrm.savaInfo.MyFunction;
+import com.example.tyhj.sybfrm.savaInfo.SharedData;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -49,25 +50,16 @@ import static com.example.tyhj.sybfrm.savaInfo.MyFunction.getStringFromInputStre
 
 @EActivity(R.layout.activity_login)
 public class Login extends AppCompatActivity {
-    String msg=null;
-    UserInfo userInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyFunction.setURL(getString(R.string.url));
-        if(MyFunction.canLog(this)){
+        UserInfo userInfo=new SharedData(this).getUser();
+        if(userInfo!=null){
             MyFunction.setIstour(false);
+            MyFunction.setUserInfo(userInfo);
             if(MyFunction.isIntenet(this)){
-                MyFunction.getInitInformation(this);
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MyFunction.doPostToGetUserInfo(Login.this);
-                    }
-                }).start();
-            }else {
-                MyFunction.getInitInformation(this);
+                doPostToGetUserInfo();
             }
             startActivity(new Intent(this,Home_.class));
             this.finish();
@@ -120,60 +112,22 @@ public class Login extends AppCompatActivity {
     //连接服务器并登陆
     @Background
     public void doPost(String name ,String password){
-        try {
-            HttpURLConnection conn = null;
-            String url = getString(R.string.url)+"/sign_in";
-            URL mURL = new URL(url);
-            conn = (HttpURLConnection) mURL.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setReadTimeout(5000);
-            conn.setConnectTimeout(10000);
-            conn.setDoOutput(true);
-            String data =  "u_loginname=" + name + "&u_psw=" + password;
-            OutputStream out = conn.getOutputStream();
-            out.write(data.getBytes());
-            out.flush();
-            out.close();
-            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
-            if (responseCode == 200) {
-                InputStream is = conn.getInputStream();
-                String state = getStringFromInputStream(is);
-                JSONObject jsonObject=new JSONObject(state);
-                if(jsonObject.getInt("code")==1){
-                    snackBar("登陆成功",Snackbar.LENGTH_SHORT);
-                    //Log.i("TAG",state);
-                    MyFunction.saveUserInfo(Login.this,new UserInfo(
-                            jsonObject.getString("u_id"),
-                            MyFunction.getUserHeadImage(jsonObject.getString("u_id")),
-                            jsonObject.getString("u_name"),
-                            jsonObject.getString("u_email"),
-                            jsonObject.getString("u_intro"),
-                            jsonObject.getString("u_reputation"),
-                            jsonObject.getString("u_blog"),
-                            jsonObject.getString("u_github")));
-                    SharedPreferences sharedPreferences=getSharedPreferences("savePas", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
-                    editor.putString("pas",etUserPassword.getText().toString());
-                    editor.commit();
-                    MyFunction.setIstour(false);
-                    MyFunction.getUserInfo().setPassword(etUserPassword.getText().toString());
-                    finishActivity();
-                }else {
-                    snackBar(jsonObject.getString("codeState"),Snackbar.LENGTH_SHORT);
-                }
-            } else {
-                snackBar("后台很菜，服务器崩溃了，请稍后再试",Snackbar.LENGTH_SHORT);
-                Log.i("TAG", "访问失败" + responseCode);
-            }
-        } catch (Exception e) {
-            snackBar("后台很菜，服务器崩溃了，请稍后再试",Snackbar.LENGTH_SHORT);
-            e.printStackTrace();
-        }
+        String data =  "u_loginname=" + name + "&u_psw=" + password;
+        String reback=MyFunction.Login(data,password,Login.this);
+        if(reback==null)
+            finishActivity();
+        else
+            Snackbar.make(btnLogin,reback,Snackbar.LENGTH_SHORT).show();
     }
 
     @Background
     void savaTourInfo(){
         MyFunction.setUserInfo(new UserInfo("5233",MyFunction.getUserHeadImage("5233"),"tour#5233","null",getString(R.string.intro),"0","null","null"));
         finishActivity();
+    }
+
+    @Background
+    void doPostToGetUserInfo(){
+        MyFunction.doPostToGetUserInfo(Login.this);
     }
 }

@@ -53,6 +53,7 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
     List<Essay> essayList;
     Context context;
     ImageLoader imageLoader;
+
     public EssayAdpter(final Context context, List<Essay> essayList) {
         this.context = context;
         this.essayList = essayList;
@@ -94,7 +95,7 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
 
         if(imgeUrl!=null) {
             imageLoader.displayImage(imgeUrl, holder.ivEssayImage, MyFunction.getOption());
-            Log.e("ImageUrl",imgeUrl);
+            //Log.e("ImageUrl",imgeUrl);
         }
         else
             holder.ivEssayImage.setVisibility(View.GONE);
