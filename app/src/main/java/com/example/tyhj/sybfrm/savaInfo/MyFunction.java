@@ -109,7 +109,7 @@ public class MyFunction {
     public static DisplayImageOptions getOption() {
         return new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.mipmap.girl)
-                .showImageOnFail(R.mipmap.girl)
+                //.showImageOnFail(R.mipmap.girl)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
@@ -591,7 +591,7 @@ public class MyFunction {
         else {
             String str = json.getString("t_text");
             String essayUrl = null;
-            if (str.length() > 10)
+            if (str.length() > 10&&str.contains("![](http://"))
                 essayUrl = str.substring(str.indexOf("![](http://") + 4, str.indexOf(".JPEG)") + 5);
             //Log.e("TAg",str+"xxxxxx"+essayUrl+"");
             Essay essay = new Essay(

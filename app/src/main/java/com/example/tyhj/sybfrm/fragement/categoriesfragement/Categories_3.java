@@ -3,11 +3,15 @@ package com.example.tyhj.sybfrm.fragement.categoriesfragement;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,9 @@ import com.example.tyhj.sybfrm.Adpter.EssayAdpter;
 import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
 import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.info.Essay;
+import com.example.tyhj.sybfrm.savaInfo.MyFunction;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +36,10 @@ public class Categories_3 extends Fragment {
     RecyclerView rcyvLikeTagsEssay;
     private EssayAdpter mAdapter;
     private List<Essay> mDatas;
+    SwipeRefreshLayout swipeRefreshLayout;
+    boolean ifFinish;
 
-    String testUserUrl="http://ac-fgtnb2h8.clouddn.com/21d88c8102759c96ecdf.jpg";
-    String testEssayUrl="http://tupian.enterdesk.com/2014/lxy/2014/04/24/2/6.jpg";
-    String testEssayUrl2="http://photo.enterdesk.com/2011-7-17/enterdesk.com-D7E968D1602DAED1B19229CF1BD3C5B1.jpg";
+
     public Categories_3() {
         // Required empty public constructor
     }
@@ -47,7 +54,9 @@ public class Categories_3 extends Fragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_categories_3, null);
         rcyvLikeTagsEssay= (RecyclerView) view.findViewById(R.id.rcyvLikeTagsEssay);
+        swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recycleView();
+        getEssay();
         return view;
     }
 
@@ -71,6 +80,45 @@ public class Categories_3 extends Fragment {
                 showButton.showMe(false);
             }
         });
+
+        //刷新
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_red_light,
+                android.R.color.holo_blue_dark,
+                android.R.color.holo_green_light);// 设置刷新动画的颜色
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                if(ifFinish) {
+                    swipeRefreshLayout.setRefreshing(true);// 开始刷新
+                    // 执行刷新后需要完成的操作
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String[] str = MyFunction.getEssayId(0);
+                            if (str != null) {
+                                for (int i = 0; i < str.length; i++) {
+                                    try {
+                                        Essay essay = new Essay(null, null, null, null, null, null, null, true, true, null, str[i], null);
+                                        if (!mDatas.contains(essay)) {
+                                            mDatas.add(0, MyFunction.getEssay(str[i]));
+                                            handler.sendEmptyMessage(2);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            handler.sendEmptyMessage(3);
+                        }
+                    }).start();
+                }else {
+                    Snackbar.make(swipeRefreshLayout,"数据加载中,请稍后再试",Snackbar.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     private void recycleView() {
@@ -86,4 +134,44 @@ public class Categories_3 extends Fragment {
     public void setShowme(ShowButton showButton){
         this.showButton=showButton;
     }
+
+    private void getEssay() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String[] str= MyFunction.getEssayId(0);
+                if(str!=null) {
+                    for (int i = 0; i < str.length; i++) {
+                        try {
+                            mDatas.add(MyFunction.getEssay(str[i]));
+                            handler.sendEmptyMessage(1);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }else {
+                    Log.e("失败","为什么");
+                }
+                ifFinish=true;
+            }
+        }).start();
+    }
+
+    android.os.Handler handler=new android.os.Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    mAdapter.notifyItemInserted(mDatas.size());
+                    break;
+                case 2:
+                    mAdapter.notifyItemInserted(0);
+                    rcyvLikeTagsEssay.scrollToPosition(0);
+                    break;
+                case 3:
+                    swipeRefreshLayout.setRefreshing(false);
+                    break;
+            }
+        }
+    };
 }

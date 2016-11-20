@@ -58,4 +58,9 @@ dependencies{
     compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
     compile files('libs/universal-image-loader-1.9.5.jar')
 
+    //图片压缩
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'top.zibin:Luban:1.0.9'
+
 }

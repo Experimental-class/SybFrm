@@ -92,8 +92,10 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
 
         String imgeUrl = essay.getEssayImageUrl();
 
-        if(imgeUrl!=null)
+        if(imgeUrl!=null) {
             imageLoader.displayImage(imgeUrl, holder.ivEssayImage, MyFunction.getOption());
+            Log.e("ImageUrl",imgeUrl);
+        }
         else
             holder.ivEssayImage.setVisibility(View.GONE);
 

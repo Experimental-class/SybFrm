@@ -255,9 +255,7 @@ public class WriteEssay extends AppCompatActivity {
             case TAKE_PHOTO:
                 if (resultCode == WriteEssay.this.RESULT_OK) {
                     File file=new File(path,date);
-                    File newFile = new File(path, date);
-                    MyFunction.ImgCompress(file.getAbsolutePath(), newFile,100);
-                    cropPhoto(Uri.fromFile(newFile));
+                    cropPhoto(Uri.fromFile(file));
                 }
                 break;
             //这是从相册返回的数据
@@ -269,7 +267,11 @@ public class WriteEssay extends AppCompatActivity {
                     }
                     String path_pre = MyFunction.getFilePathFromContentUri(imageUri, contentResolver);
                     File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                    MyFunction.ImgCompress(path_pre, newFile,100);
+                    try {
+                        MyFunction.copyFile(new File(path_pre), newFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     cropPhoto(Uri.fromFile(newFile));
                 }
                 break;
@@ -278,8 +280,7 @@ public class WriteEssay extends AppCompatActivity {
                 if (resultCode == WriteEssay.this.RESULT_OK) {
                     final String fileName = path + "/" + date;
                     File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                    MyFunction.ImgCompress(fileName, newFile,300);
-
+                    MyFunction.ImgCompress(fileName, newFile,00);
                     try {
                         if (!MyFunction.isIntenet(WriteEssay.this))
                             return;

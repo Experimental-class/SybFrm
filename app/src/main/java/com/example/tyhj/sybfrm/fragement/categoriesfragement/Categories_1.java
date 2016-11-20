@@ -41,9 +41,6 @@ public class Categories_1 extends Fragment {
     private List<Essay> mDatas;
     SwipeRefreshLayout swipeRefreshLayout;
     boolean ifFinish;
-    String testUserUrl="http://ac-fgtnb2h8.clouddn.com/21d88c8102759c96ecdf.jpg";
-    String testEssayUrl="http://tupian.enterdesk.com/2014/lxy/2014/04/24/2/6.jpg";
-    String testEssayUrl2="http://photo.enterdesk.com/2011-7-17/enterdesk.com-D7E968D1602DAED1B19229CF1BD3C5B1.jpg";
     public Categories_1() {
         // Required empty public constructor
     }
@@ -79,10 +76,10 @@ public class Categories_1 extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                    ifFinish=true;
                 }else {
                     Log.e("失败","为什么");
                 }
+                ifFinish=true;
             }
         }).start();
     }
@@ -166,7 +163,7 @@ public class Categories_1 extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 1:
-                    mAdapter.notifyItemInserted(mDatas.size()-1);
+                    mAdapter.notifyItemInserted(mDatas.size());
                     break;
                 case 2:
                     mAdapter.notifyItemInserted(0);

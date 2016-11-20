@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="color">
+        <item>#79bef5</item>
+        <item>#f692c6</item>
+        <item>#71aedc</item>
+        <item>#f5aa83</item>
+        <item>#acdf7a</item>
+        <item>#ec5b56</item>
+        <item>#ff6c6a</item>
+        <item>#ff74b5</item>
+        <item>#61bafe</item>
+        <item>#b58dff</item>
+        <item>#20d2f4</item>
+        <item>#41b983</item>
+        <item>#d566ad</item>
+        <item>#eeeef8</item>
+        <item>#7992d4</item>
+        <item>#f68e83</item>
+        <item>#0071ba</item>
+        <item>#30b9f5</item>
+        <item>#41df5f</item>
+        <item>#93bafd</item>
+        <item>#ed4672</item>
+        <item>#c6d779</item>
+        <item>#cccfd4</item>
+        <item>#21b6ab</item>
+        <item>#28cbe6</item>
+        <item>#eeeef6</item>
+        <item>#7a9edc</item>
+        <item>#83cf51</item>
+        <item>#f65d58</item>
+        <item>#ee4540</item>
+        <item>#41a6f6</item>
+        <item>#ac7dc5</item>
+        <item>#00c6c7</item>
+        <item>#f77230</item>
+        <item>#eeeef6</item>
+    </string-array>
+    <string-array name="tags_face">
+        <item>Html</item>
+        <item>JavaScript</item>
+        <item>jQuery</item>
+        <item>Node.js</item>
+        <item>AngularJS</item>
+        <item>WebApp</item>
+        <item>前端工具</item>
+        <item>CSS</item>
+        <item>Bootstrap</item>
+        <item>React.js</item>
+        <item>Vue.js</item>
+        <item>Sass/Less</item>
+    </string-array>
+    <string-array name="tags_back">
+        <item>PHP</item>
+        <item>Java</item>
+        <item>Python</item>
+        <item>C</item>
+        <item>C++</item>
+        <item>Go</item>
+        <item>C#</item>
+    </string-array>
+    <string-array name="tag_mobile">
+        <item>Android</item>
+        <item>iOS</item>
+        <item>Unity 3D</item>
+        <item>Cocos2d-x</item>
+    </string-array>
+    <string-array name="tags_date">
+        <item>MySQL</item>
+        <item>MongoDB</item>
+        <item>Oracle</item>
+        <item>SQL Server</item>
+        </string-array>
+    <string-array name="tags_yun">
+        <item>云计算</item>
+        <item>大数据</item>
+        </string-array>
+    <string-array name="tags_test">
+        <item>Linux</item>
+        <item>测试</item>
+        </string-array>
+    <string-array name="tags_view">
+        <item>Photoshop</item>
+        <item>Premiere</item>
+        <item>Maya</item>
+        <item>ZBrush</item>
+    </string-array>
+</resources>
