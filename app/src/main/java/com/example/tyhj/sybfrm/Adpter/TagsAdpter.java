@@ -54,19 +54,19 @@ public class TagsAdpter extends RecyclerView.Adapter<TagsAdpter.MyViewHolder> {
         holder.ivTags.setOutlineProvider(MyFunction.getOutline(true,10,0));
 
         if(type==1){
-            Picasso.with(context).load(ics_face[position]).resize(24,24).centerCrop().into(holder.ivTags);
+            holder.ivTags.setImageResource(ics_face[position]);
         }else if(type==2){
-            Picasso.with(context).load(ics_back[position]).resize(55,55).centerCrop().into(holder.ivTags);
+            holder.ivTags.setImageResource(ics_back[position]);
         }else if(type==3){
-            Picasso.with(context).load(ics_mobile[position]).resize(55,55).centerCrop().into(holder.ivTags);
+            holder.ivTags.setImageResource(ics_mobile[position]);
         }else if(type==4){
-            Picasso.with(context).load(ics_data[position]).resize(55,55).centerCrop().into(holder.ivTags);
+            holder.ivTags.setImageResource(ics_data[position]);
         }else if(type==5){
-            Picasso.with(context).load(ics_yun[position]).resize(55,55).centerCrop().into(holder.ivTags);
+            holder.ivTags.setImageResource(ics_yun[position]);
         }else if(type==6){
-            Picasso.with(context).load(ics_test[position]).resize(55,55).centerCrop().into(holder.ivTags);
+            holder.ivTags.setImageResource(ics_test[position]);
         }else if(type==7){
-            Picasso.with(context).load(ics_view[position]).resize(55,55).centerCrop().into(holder.ivTags);
+            holder.ivTags.setImageResource(ics_view[position]);
         }
 
     }
@@ -97,17 +97,17 @@ public class TagsAdpter extends RecyclerView.Adapter<TagsAdpter.MyViewHolder> {
 
 
     int[] ics_face=new int[]{
-            R.drawable.html,R.drawable.javascript,R.drawable.jquery,R.drawable.node,R.drawable.angular,
-            R.drawable.webapp,R.drawable.facetools,R.drawable.css,R.drawable.bootstrap,R.drawable.react,
+            R.drawable.html,R.drawable.javascrip,R.drawable.jquery,R.drawable.node,R.drawable.angular,
+            R.drawable.webapp,R.drawable.tools,R.drawable.css,R.drawable.bootstrap,R.drawable.react,
             R.drawable.vue,R.drawable.sass};
 
     int[] ics_back=new int[]{
-            R.drawable.php, R.drawable.java, R.drawable.python, R.drawable.c, R.drawable.cpro, R.drawable.go,
+            R.drawable.php, R.drawable.java, R.drawable.python, R.drawable.c, R.drawable.c_pro, R.drawable.go,
             R.drawable.c_sharp
     };
 
     int[] ics_mobile=new int[]{
-            R.drawable.android,R.drawable.ios,R.drawable.unity3d,R.drawable.cocos2d_x
+            R.drawable.android,R.drawable.ios,R.drawable.unity_3d,R.drawable.cocos2d_x
     };
 
     int[] ics_data=new int[]{
