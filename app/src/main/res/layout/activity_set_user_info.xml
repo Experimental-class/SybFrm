@@ -110,6 +110,7 @@
                         android:text="昵称:" />
 
                     <EditText
+                        android:focusable="false"
                         android:id="@+id/et_name"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"

@@ -1,6 +1,7 @@
 package com.example.tyhj.sybfrm.info;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Created by _Tyhj on 2016/8/3.
@@ -8,17 +9,6 @@ import java.io.Serializable;
 public class UserInfo implements Serializable{
     String id,url, name, email, signature,reputation,blog,github,password;
     String tags[];
-
-    @Override
-    public String toString() {
-        return "UserInfo{" +
-                "id='" + id + '\'' +
-                ", url='" + url + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", signature='" + signature + '\'' +
-                '}';
-    }
 
     public UserInfo(String id, String url, String name, String email, String signature,String reputation,String blog,String github) {
         this.id = id;
@@ -109,5 +99,21 @@ public class UserInfo implements Serializable{
 
     public void setTags(String[] tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "id='" + id + '\'' +
+                ", url='" + url + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", signature='" + signature + '\'' +
+                ", reputation='" + reputation + '\'' +
+                ", blog='" + blog + '\'' +
+                ", github='" + github + '\'' +
+                ", password='" + password + '\'' +
+                ", tags=" + Arrays.toString(tags) +
+                '}';
     }
 }

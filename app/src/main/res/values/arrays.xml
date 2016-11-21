@@ -37,6 +37,7 @@
         <item>#f77230</item>
         <item>#eeeef6</item>
     </string-array>
+
     <string-array name="tags_face">
         <item>Html</item>
         <item>JavaScript</item>
@@ -51,6 +52,7 @@
         <item>Vue.js</item>
         <item>Sass/Less</item>
     </string-array>
+
     <string-array name="tags_back">
         <item>PHP</item>
         <item>Java</item>

@@ -70,14 +70,17 @@ public class Categories_1 extends Fragment {
                 if(str!=null) {
                     for (int i = 0; i < str.length; i++) {
                         try {
-                            mDatas.add(MyFunction.getEssay(str[i]));
-                            handler.sendEmptyMessage(1);
+                            Essay essay=MyFunction.getEssay(str[i]);
+                            if(essay!=null) {
+                                mDatas.add(essay);
+                                handler.sendEmptyMessage(1);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 }else {
-                    Log.e("失败","为什么");
+                    //Log.e("失败","为什么");
                 }
                 ifFinish=true;
             }

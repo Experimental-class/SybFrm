@@ -61,4 +61,12 @@ public  class SharedData {
         }
         return userInfo;
     }
+
+    public void logOut(){
+        SharedPreferences shared = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.clear();
+        editor.commit();
+    }
+
 }  

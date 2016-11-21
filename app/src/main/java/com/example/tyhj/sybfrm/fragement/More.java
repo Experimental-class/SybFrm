@@ -21,6 +21,7 @@ import com.example.tyhj.sybfrm.R;
 import com.example.tyhj.sybfrm.SetUserInfo_;
 import com.example.tyhj.sybfrm.info.UserInfo;
 import com.example.tyhj.sybfrm.savaInfo.MyFunction;
+import com.example.tyhj.sybfrm.savaInfo.SharedData;
 import com.squareup.picasso.Picasso;
 
 import org.androidannotations.annotations.Background;
@@ -92,10 +93,7 @@ public class More extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_logout:
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("saveLogin", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
-                editor.clear();
-                editor.commit();
+                new SharedData(getActivity()).logOut();
                 startActivity(new Intent(getActivity(), Login_.class));
                 getActivity().finish();
                 break;
@@ -111,10 +109,10 @@ public class More extends Fragment implements View.OnClickListener {
     //获取新信息
     @Background
     void getInfo() {
-        while (!MyFunction.doPostToGetUserInfo(getActivity())&&!MyFunction.istour()){
-
-        }
+        if(!MyFunction.istour()){
+            MyFunction.doPostToGetUserInfo(getActivity());
             upDateInfo();
+        }
     }
 
     @Override

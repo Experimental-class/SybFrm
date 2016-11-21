@@ -51,6 +51,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -270,7 +274,8 @@ public class MyFunction {
                             jsonObject.getString("u_github"));
                     userInfo.setPassword(pas);
                     String tags[] = jsonObject.getString("u_tags").split(",", 0);
-                    userInfo.setTags(tags);
+                    if(!tags[0].equals(""))
+                        userInfo.setTags(tags);
                     new SharedData(context).saveUser(userInfo);
                     MyFunction.setUserInfo(userInfo);
                     return null;
@@ -403,15 +408,19 @@ public class MyFunction {
     //获取用户信息
     public static boolean doPostToGetUserInfo(Context context) {
         try {
+            int time=0;
             String url = URL + "/u/query";
             String id=MyFunction.getUserInfo().getId();
             String data = "u_id=" + id;
             JSONObject jsonObject=getJson(data,url);
                 if (jsonObject!=null&&jsonObject.getInt("code") == 1) {
-                    //Log.e("Tag",state);
+                    //Log.e("Tag",jsonObject.toString());
                     String headImage = MyFunction.getUserHeadImage(id);
-                    if (headImage == null)
-                        return false;
+                    while (headImage==null&&time<10){
+                        //Log.e("while","我正在飞"+time);
+                        time++;
+                        headImage = MyFunction.getUserHeadImage(id);
+                    }
                     UserInfo userInfo = new UserInfo(
                             id,
                             headImage,
@@ -423,7 +432,14 @@ public class MyFunction {
                             jsonObject.getString("u_github"));
                     userInfo.setPassword(getUserInfo().getPassword());
                     String tags[] = jsonObject.getString("u_tags").split(",", 0);
-                    userInfo.setTags(tags);
+                    if(!tags[0].equals("null")){
+                        /*List list = Arrays.asList(tags);
+                        Set set = new HashSet(list);
+                        tags= (String[]) set.toArray();*/
+                        userInfo.setTags(tags);
+                    }
+                    MyFunction.setUserInfo(userInfo);
+                    //Log.e("Info",userInfo.toString());
                     new SharedData(context).saveUser(userInfo);
                     return true;
                 } else {
@@ -499,9 +515,11 @@ public class MyFunction {
             if (jsonObject!=null&&jsonObject.getInt("code") == 1) {
                 String str = jsonObject.getString("t_ids");
                 String[] strings = str.split("&");
+                if(strings==null||strings.length==0||strings[0]==null||strings[1]==null)
+                    return null;
                 String[] strings1 = strings[0].split(",");
                 String[] strings2 = strings[1].split(",");
-                //Log.i("TAG_文章信息",state+strings1[0]);
+                //Log.i("TAG_文章信息",jsonObject.toString()+strings1[0]);
                 if (type == 0)
                     return strings1;
                 else
@@ -548,14 +566,18 @@ public class MyFunction {
     public static Essay getEssay(String id) throws JSONException {
         String url = URL + "/t/query";
         JSONObject json = getJson("t_id=" + id, url);
-        if (json == null)
+        if (json == null||json.getInt("code")!=1)
             return null;
         else {
+            Log.e("Essay",json.toString());
             String str = json.getString("t_text");
             String essayUrl = null;
             if (str.length() > 10 && str.contains("![](http://"))
                 essayUrl = str.substring(str.indexOf("![](http://") + 4, str.indexOf(".JPEG)") + 5);
             //Log.e("TAg",str+"xxxxxx"+essayUrl+"");
+            if(MyFunction.getUserInfo(json.getString("u_id"))==null)
+                return null;
+
             Essay essay = new Essay(
                     MyFunction.getUserHeadImage(json.getString("u_id")),
                     MyFunction.getUserInfo(json.getString("u_id")).getName(),
@@ -676,4 +698,26 @@ public class MyFunction {
         else
             return false;
     }
+
+    //修改信息
+    public static boolean updateUser(String blog,String github,String tags,String intro){
+        String data="u_id=" +MyFunction.getUserInfo().getId()
+                +"&u_psw=" +MyFunction.getUserInfo().getPassword()
+                +"&u_blog="+blog
+                +"&u_github="+github
+                +"&u_tags="+tags
+                +"&u_intro="+intro;
+        String url=URL+"/u/update";
+        JSONObject object=getJson(data,url);
+        if(object!=null){
+            try {
+                if(object.getInt("code")==1)
+                    return true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
 }
