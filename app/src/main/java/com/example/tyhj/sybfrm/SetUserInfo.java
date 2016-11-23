@@ -97,8 +97,11 @@ public class SetUserInfo extends AppCompatActivity {
                 tags.add(MyFunction.getUserInfo().getTags()[i]);
             }
 
-        String tag_face[] = getResources().getStringArray(R.array.tags_face);
+        initTags();
 
+    }
+
+    private void initTags() {
         ls_face = new ArrayList<String>();
         ls_test = new ArrayList<String>();
         ls_data = new ArrayList<String>();
@@ -107,6 +110,7 @@ public class SetUserInfo extends AppCompatActivity {
         ls_view = new ArrayList<String>();
         ls_yun = new ArrayList<String>();
 
+        String tag_face[] = getResources().getStringArray(R.array.tags_face);
         String tag_back[] = getResources().getStringArray(R.array.tags_back);
         String tag_mobile[] = getResources().getStringArray(R.array.tags_mobile);
         String tag_data[] = getResources().getStringArray(R.array.tags_date);
@@ -135,7 +139,6 @@ public class SetUserInfo extends AppCompatActivity {
         for (int i = 0; i < tag_yun.length; i++) {
             ls_yun.add(tag_yun[i]);
         }
-
     }
 
     @ViewById
@@ -264,6 +267,7 @@ public class SetUserInfo extends AppCompatActivity {
         RecyclerView rcyv[] = {rcyv_face, rcyv_back, rcyv_moblie, rcyv_data, rcyv_yun, rcyv_test, rcyv_view};
         adpter = new TagsAdpter[]{tags_face, tags_back, tags_mobile, tags_data, tags_yun, tags_test, tags_view};
         for (int i = 0; i < rcyv.length; i++) {
+            adpter[i].initTags();
             rcyv[i].setAdapter(adpter[i]);
             rcyv[i].setLayoutManager(new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false));
         }

@@ -41,6 +41,9 @@ public class TagsAdpter extends RecyclerView.Adapter<TagsAdpter.MyViewHolder> {
         colors = context.getResources().getStringArray(R.array.color);
         this.type = type;
         tags.clear();
+    }
+
+    public void initTags() {
         if (MyFunction.getUserInfo().getTags() != null)
             for (int i = 0; i < MyFunction.getUserInfo().getTags().length; i++) {
                 String tag=MyFunction.getUserInfo().getTags()[i];

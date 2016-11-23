@@ -198,10 +198,6 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
     }
 
 
-
-
-
-
     //点击事件
     private void setClick(final EssayViewHolder holder, final Essay essay, final int[] likes,
                           final ObjectAnimator animator, final ObjectAnimator animator2,
