@@ -91,7 +91,8 @@ public class Categories_1 extends Fragment {
                                     mDatas.add(essay);
                                 else
                                     mDatas.add(0,essay);
-                                handler.sendEmptyMessage(type);
+                                if(location!=5)
+                                    handler.sendEmptyMessage(type);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -100,9 +101,17 @@ public class Categories_1 extends Fragment {
                             count=count+ESSAYCONUTLIMIT;
                             break;
                         }
-                        if(i==(essaysId.length-1))
+                        if(i==(essaysId.length-1)){
                             count=i;
+                            count=count+ESSAYCONUTLIMIT;
+                        }
+                        Log.e("Count"," "+i);
                     }
+                    if(location==5){
+                        mDatas.remove(loading_position);
+                        handler.sendEmptyMessage(4);
+                    }
+
                 }else {
                     //Log.e("失败","为什么");
                 }
@@ -146,7 +155,6 @@ public class Categories_1 extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-
                             getEssay(2,0);
                             handler.sendEmptyMessage(3);
                         }
@@ -170,22 +178,10 @@ public class Categories_1 extends Fragment {
                 if(ifFinish&&lastVisibleItem==totalItemCount-1){
                     ifFinish=false;
                     //Toast.makeText(getActivity(),"最后一个",Toast.LENGTH_SHORT).show();
-                    mDatas.add(null);
+                    mDatas.add(new Essay(null,null,null,null,null,null,null,false,false,null,null,null));
                     mAdapter.notifyItemInserted(mDatas.size()-1);
                     loading_position=mDatas.size()-1;
-                    getEssay(1,1);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(800);
-                                mDatas.remove(loading_position);
-                                handler.sendEmptyMessage(4);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
+                    getEssay(1,5);
                 }
             }
         });

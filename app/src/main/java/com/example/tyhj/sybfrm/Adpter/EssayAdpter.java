@@ -75,7 +75,7 @@ public class EssayAdpter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder1, final int position) {
         final EssayViewHolder holder= (EssayViewHolder) holder1;
-        if(essayList.get(holder.getPosition())==null){
+        if(essayList.get(position).getE_id()==null){
             holder.cdvLoading.setVisibility(View.VISIBLE);
             holder.cdvEssay.setVisibility(View.GONE);
             return;

@@ -140,7 +140,8 @@ public class Essay implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(this.getE_id().equals( ((Essay)o).getE_id()))
+
+        if(this!=null&&this.getE_id().equals( ((Essay)o).getE_id()))
             return true;
         else
             return false;
