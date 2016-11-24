@@ -45,7 +45,7 @@ import static com.squareup.picasso.MemoryPolicy.NO_STORE;
  * Created by Tyhj on 2016/10/3.
  */
 
-public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolder> {
+public class EssayAdpter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static String TEXTTYPE_FANGTING_BLACK = "fonts/huakang_black.TTF";
     private static String TEXTTYPE_YANHEI = "fonts/yahei.ttf";
     Typeface typefaceYahei, typefaceLanting;
@@ -65,16 +65,23 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
 
 
     @Override
-    public EssayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_essay, parent, false);
         EssayViewHolder essayViewHolder = new EssayViewHolder(view);
         return essayViewHolder;
     }
 
 
-
     @Override
-    public void onBindViewHolder(final EssayViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder1, final int position) {
+        final EssayViewHolder holder= (EssayViewHolder) holder1;
+        if(essayList.get(holder.getPosition())==null){
+            holder.cdvLoading.setVisibility(View.VISIBLE);
+            holder.cdvEssay.setVisibility(View.GONE);
+            return;
+        }
+        holder.cdvLoading.setVisibility(View.GONE);
+        holder.cdvEssay.setVisibility(View.VISIBLE);
         holder.ivEssayImage.setVisibility(View.VISIBLE);
         String headImage=essayList.get(position).getUserHeadImageUrl();
         final boolean[] turn = {false};
@@ -300,9 +307,17 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
         }
     }
 
+    public int dp2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    public ImageLoader getImageLoader() {
+        return imageLoader;
+    }
 
     class EssayViewHolder extends RecyclerView.ViewHolder {
-        CardView cdvEssay;
+        CardView cdvEssay,cdvLoading;
         ImageView iv_userHeadImage, ivEssayImage,iv_zan,iv_Left,iv_collect;
         TextView tv_userName, tvEssayTitle, tvEssayBody;
         TextSwitcher tsLikesCounter;
@@ -310,6 +325,7 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
         public EssayViewHolder(View view) {
             super(view);
             cdvEssay = (CardView) view.findViewById(R.id.cdvEssay);
+            cdvLoading= (CardView) view.findViewById(R.id.cdvLoading);
             iv_userHeadImage = (ImageView) view.findViewById(R.id.iv_userHeadImage);
             ivEssayImage = (ImageView) view.findViewById(R.id.ivEssayImage);
             tv_userName = (TextView) view.findViewById(R.id.tv_userName);
@@ -330,16 +346,4 @@ public class EssayAdpter extends RecyclerView.Adapter<EssayAdpter.EssayViewHolde
             });
         }
     }
-
-    public int dp2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-    public ImageLoader getImageLoader() {
-        return imageLoader;
-    }
-
-
-
 }

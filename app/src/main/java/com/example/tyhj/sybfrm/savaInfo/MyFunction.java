@@ -412,7 +412,7 @@ public class MyFunction {
             String url = URL + "/u/query";
             String id=MyFunction.getUserInfo().getId();
             String data = "u_id=" + id;
-            JSONObject jsonObject=getJson(data,url);
+            JSONObject jsonObject=getJson_GET(data,url);
                 if (jsonObject!=null&&jsonObject.getInt("code") == 1) {
                     //Log.e("Tag",jsonObject.toString());
                     String headImage = MyFunction.getUserHeadImage(id);
@@ -454,24 +454,11 @@ public class MyFunction {
     //查询用户信息
     public static UserInfo getUserInfo(String id) throws JSONException {
         try {
-            HttpURLConnection conn = null;
             String url = URL + "/u/query";
-            URL mURL = new URL(url);
-            conn = (HttpURLConnection) mURL.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setReadTimeout(5000);
-            conn.setConnectTimeout(10000);
-            conn.setDoOutput(true);
             String data = "u_id=" + id;
-            OutputStream out = conn.getOutputStream();
-            out.write(data.getBytes());
-            out.flush();
-            out.close();
-            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
-            if (responseCode == 200) {
-                InputStream is = conn.getInputStream();
-                String state = getStringFromInputStream(is);
-                JSONObject jsonObject = new JSONObject(state);
+                JSONObject jsonObject = getJson_GET(data,url);
+                if(jsonObject==null)
+                    return null;
                 if (jsonObject.getInt("code") == 1) {
                     UserInfo userInfo1 = new UserInfo(
                             id,
@@ -486,7 +473,6 @@ public class MyFunction {
                     return userInfo1;
                 } else
                     Log.e("TAG", jsonObject.getString("codeState"));
-            }
             return null;
         } catch (Exception e) {
             return null;
@@ -505,13 +491,11 @@ public class MyFunction {
                 else
                     data=data+tags[i];
             }
-            data = "t_tags=" +data.toLowerCase()+ "&show_count=" + 20;
-            Log.e("TAGs",data);
+            data = "t_tags=" +data.toLowerCase()+ "&show_count=" + 200;
+            //Log.e("TAGs",data);
         }else
-            data = "show_count=" + 20;
-        JSONObject jsonObject = getJson(data, url);
-        if(type==2)
-            Log.i("TAG_文章信息",jsonObject.toString());
+            data = "show_count=" + 200;
+        JSONObject jsonObject = getJson_GET(data, url);
         try {
             if (jsonObject!=null&&jsonObject.getInt("code") == 1) {
                 String str = jsonObject.getString("t_ids");
@@ -562,10 +546,34 @@ public class MyFunction {
         }
     }
 
+
+    //获取信息
+    public static JSONObject getJson_GET(String data, String url) {
+        HttpURLConnection conn = null;
+        URL mURL = null;
+        try {
+            mURL = new URL(url+"?"+data);
+            conn = (HttpURLConnection) mURL.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(10000);
+                InputStream is = conn.getInputStream();
+                String state = getStringFromInputStream(is);
+                //Log.e("Tag",state);
+                JSONObject jsonObject = new JSONObject(state);
+                if (jsonObject != null)
+                    return jsonObject;
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //获取文章
     public static Essay getEssay(String id) throws JSONException {
         String url = URL + "/t/query";
-        JSONObject json = getJson("t_id=" + id, url);
+        JSONObject json = getJson_GET("t_id=" + id, url);
         if (json == null||json.getInt("code")!=1)
             return null;
         else {
@@ -577,7 +585,6 @@ public class MyFunction {
             //Log.e("TAg",str+"xxxxxx"+essayUrl+"");
             if(MyFunction.getUserInfo(json.getString("u_id"))==null)
                 return null;
-
             Essay essay = new Essay(
                     MyFunction.getUserHeadImage(json.getString("u_id")),
                     MyFunction.getUserInfo(json.getString("u_id")).getName(),

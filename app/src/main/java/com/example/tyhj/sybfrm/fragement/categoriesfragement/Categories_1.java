@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.tyhj.sybfrm.Adpter.EssayAdpter;
 import com.example.tyhj.sybfrm.Adpter.SimpleAdapter;
@@ -22,6 +23,7 @@ import com.example.tyhj.sybfrm.savaInfo.MyFunction;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.squareup.picasso.Picasso;
 
+import org.androidannotations.annotations.UiThread;
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -41,6 +43,10 @@ public class Categories_1 extends Fragment {
     private List<Essay> mDatas;
     SwipeRefreshLayout swipeRefreshLayout;
     boolean ifFinish;
+    String[] essaysId;
+    int loading_position;
+    static int ESSAYCONUTLIMIT=10;
+    int count=ESSAYCONUTLIMIT;
     public Categories_1() {
         // Required empty public constructor
     }
@@ -61,16 +67,25 @@ public class Categories_1 extends Fragment {
         getEssay(1,1);
         return view;
     }
+
+
+    //获取文章id
+    private void getEssayId(){
+        essaysId= MyFunction.getEssayId(0);
+    }
+
     //获取文章
     private void getEssay(final int type, final int location) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String[] str= MyFunction.getEssayId(0);
-                if(str!=null) {
-                    for (int i = 0; i < str.length; i++) {
+                if(count==ESSAYCONUTLIMIT||type==2)
+                    getEssayId();
+                ifFinish=false;
+                if(essaysId!=null) {
+                    for (int i = count-ESSAYCONUTLIMIT; i < essaysId.length; i++) {
                         try {
-                            Essay essay=MyFunction.getEssay(str[i]);
+                            Essay essay=MyFunction.getEssay(essaysId[i]);
                             if(essay!=null&&!mDatas.contains(essay)) {
                                 if(location!=0)
                                     mDatas.add(essay);
@@ -81,6 +96,12 @@ public class Categories_1 extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        if(i>=count){
+                            count=count+ESSAYCONUTLIMIT;
+                            break;
+                        }
+                        if(i==(essaysId.length-1))
+                            count=i;
                     }
                 }else {
                     //Log.e("失败","为什么");
@@ -119,13 +140,13 @@ public class Categories_1 extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 if(ifFinish) {
                     swipeRefreshLayout.setRefreshing(true);// 开始刷新
                     // 执行刷新后需要完成的操作
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
+
                             getEssay(2,0);
                             handler.sendEmptyMessage(3);
                         }
@@ -133,6 +154,38 @@ public class Categories_1 extends Fragment {
                 }else {
                     Snackbar.make(swipeRefreshLayout,"数据加载中,请稍后再试",Snackbar.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+        rcyvPopularEssay.addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                int totalItemCount = layoutManager.getItemCount();
+
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if(ifFinish&&lastVisibleItem==totalItemCount-1){
+                    ifFinish=false;
+                    //Toast.makeText(getActivity(),"最后一个",Toast.LENGTH_SHORT).show();
+                    mDatas.add(null);
+                    mAdapter.notifyItemInserted(mDatas.size()-1);
+                    loading_position=mDatas.size()-1;
+                    getEssay(1,1);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(800);
+                                mDatas.remove(loading_position);
+                                handler.sendEmptyMessage(4);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
                 }
             }
         });
@@ -164,6 +217,9 @@ public class Categories_1 extends Fragment {
                     break;
                 case 3:
                     swipeRefreshLayout.setRefreshing(false);
+                    break;
+                case 4:
+                    mAdapter.notifyItemRemoved(loading_position);
                     break;
             }
         }

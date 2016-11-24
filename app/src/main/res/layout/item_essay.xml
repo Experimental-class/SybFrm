@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<android.support.v7.widget.CardView
     android:id="@+id/cdvEssay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -133,4 +139,34 @@
 
 
     </LinearLayout>
+
 </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cdvLoading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#f0fefefe"
+        app:cardElevation="1dp">
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <ProgressBar
+                android:layout_marginLeft="20dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+            <TextView
+                android:textSize="13sp"
+                android:text="正在加载"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
