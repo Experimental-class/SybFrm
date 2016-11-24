@@ -55,7 +55,7 @@ public class Categories_2 extends Fragment {
         rcyvLastedEssay= (RecyclerView) view.findViewById(R.id.rcyvLastedEssay);
         swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recycleView();
-        getEssay();
+        getEssay(1,2);
         return view;
     }
 
@@ -95,20 +95,7 @@ public class Categories_2 extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            String[] str = MyFunction.getEssayId(1);
-                            if (str != null) {
-                                for (int i = 0; i < str.length; i++) {
-                                    try {
-                                        Essay essay = new Essay(null, null, null, null, null, null, null, true, true, null, str[i], null);
-                                        if (!mDatas.contains(essay)) {
-                                            mDatas.add(0, MyFunction.getEssay(str[i]));
-                                            handler.sendEmptyMessage(2);
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
+                            getEssay(2,0);
                             handler.sendEmptyMessage(3);
                         }
                     }).start();
@@ -135,7 +122,7 @@ public class Categories_2 extends Fragment {
     }
 
     //获取文章
-    private void getEssay() {
+    private void getEssay(final int type, final int location) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -144,9 +131,12 @@ public class Categories_2 extends Fragment {
                     for (int i = 0; i < str.length; i++) {
                         try {
                             Essay essay=MyFunction.getEssay(str[i]);
-                            if(essay!=null) {
-                                mDatas.add(essay);
-                                handler.sendEmptyMessage(1);
+                            if(essay!=null&&!mDatas.contains(essay)) {
+                                if(location!=0)
+                                    mDatas.add(essay);
+                                else
+                                    mDatas.add(0,essay);
+                                handler.sendEmptyMessage(type);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

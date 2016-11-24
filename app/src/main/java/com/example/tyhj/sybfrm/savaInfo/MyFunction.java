@@ -75,8 +75,6 @@ public class MyFunction {
 
     private static boolean istour = true;
 
-    private static UserInfo userInfo1;
-
     public static boolean istour() {
         return istour;
     }
@@ -475,7 +473,7 @@ public class MyFunction {
                 String state = getStringFromInputStream(is);
                 JSONObject jsonObject = new JSONObject(state);
                 if (jsonObject.getInt("code") == 1) {
-                    userInfo1 = new UserInfo(
+                    UserInfo userInfo1 = new UserInfo(
                             id,
                             MyFunction.getUserHeadImage(id),
                             jsonObject.getString("u_name"),
@@ -495,7 +493,7 @@ public class MyFunction {
         }
     }
 
-    //获取文章
+    //获取文章id组
     public static String[] getEssayId(int type) {
         String url = URL + "/t/display";
         String data="";
@@ -507,12 +505,13 @@ public class MyFunction {
                 else
                     data=data+tags[i];
             }
-            data = "t_tags=" +data+ "&show_count=" + 20;
-        }
-        else
+            data = "t_tags=" +data.toLowerCase()+ "&show_count=" + 20;
+            Log.e("TAGs",data);
+        }else
             data = "show_count=" + 20;
-        getJson(data, url);
         JSONObject jsonObject = getJson(data, url);
+        if(type==2)
+            Log.i("TAG_文章信息",jsonObject.toString());
         try {
             if (jsonObject!=null&&jsonObject.getInt("code") == 1) {
                 String str = jsonObject.getString("t_ids");
@@ -521,7 +520,6 @@ public class MyFunction {
                     return null;
                 String[] strings1 = strings[0].split(",");
                 String[] strings2 = strings[1].split(",");
-                //Log.i("TAG_文章信息",jsonObject.toString()+strings1[0]);
                 if (type == 0)
                     return strings1;
                 else
@@ -571,7 +569,7 @@ public class MyFunction {
         if (json == null||json.getInt("code")!=1)
             return null;
         else {
-            Log.e("Essay",json.toString());
+            //Log.e("Essay",json.toString());
             String str = json.getString("t_text");
             String essayUrl = null;
             if (str.length() > 10 && str.contains("![](http://"))
@@ -701,6 +699,25 @@ public class MyFunction {
             return false;
     }
 
+    //发表文章
+    public static String publishEssay(String title ,String text,String tags){
+        String url = URL+"/t/add";
+        String data =  "u_id=" + MyFunction.getUserInfo().getId() + "&u_psw=" + MyFunction.getUserInfo().getPassword()+"&t_title="+title+"&t_text="+text+"&t_tags="+tags;
+        JSONObject jsonObject=getJson(data,url);
+        if(jsonObject!=null){
+            try {
+                if(jsonObject.getInt("code")==1){
+                    return null;
+                }else {
+                    return jsonObject.getString("codeState");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return "失败";
+    }
+
     //修改信息
     public static boolean updateUser(String blog,String github,String tags,String intro){
         String data="u_id=" +MyFunction.getUserInfo().getId()
@@ -721,5 +738,8 @@ public class MyFunction {
         }
         return false;
     }
+
+
+
 
 }

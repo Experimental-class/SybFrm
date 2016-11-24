@@ -75,7 +75,7 @@ public class WriteEssay extends AppCompatActivity {
     String PATH = Environment.getExternalStorageDirectory() + "/SybFrm";
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
-    public static final int PICK_PHOTO=0;
+    public static final int PICK_PHOTO = 0;
 
     TagsAdpter tags_face, tags_back, tags_mobile, tags_data, tags_yun, tags_test, tags_view;
 
@@ -190,15 +190,18 @@ public class WriteEssay extends AppCompatActivity {
         if (title.equals("") || text.equals("")) {
             Snackbar.make(iv_publish, "标题或者内容不能为空", Snackbar.LENGTH_SHORT).show();
         } else {
-            publishEssay(title,text,getTags());
+            publishEssay(title, text, getTags());
         }
     }
 
     private String getTags() {
-        String tags="";
-        for(int i=0;i<adpter.length;i++){
-            for(int j=0;j<adpter[i].getTags().size();j++){
-                tags=tags+adpter[i].getTags().get(j)+",";
+        String tags = "";
+        for (int i = 0; i < adpter.length; i++) {
+            for (int j = 0; j < adpter[i].getTags().size(); j++) {
+                if(j!=adpter[i].getTags().size()-1)
+                    tags = tags + adpter[i].getTags().get(j) + ",";
+                else
+                    tags = tags + adpter[i].getTags().get(j);
             }
         }
         return tags;
@@ -212,7 +215,7 @@ public class WriteEssay extends AppCompatActivity {
 
     //tags
     @Click(R.id.iv_tags)
-    void addTags(){
+    void addTags() {
         ll_tags.setVisibility(View.VISIBLE);
     }
 
@@ -237,9 +240,10 @@ public class WriteEssay extends AppCompatActivity {
         MyFunction.deleteEssay(this);
         this.finish();
     }
-    @android.support.annotation.UiThread
-    void snackBar(String string,int time){
-        Snackbar.make(iv_publish,string,time).show();
+
+    @UiThread
+    void snackBar(String string, int time) {
+        Snackbar.make(iv_publish, string, time).show();
     }
 
     @UiThread
@@ -263,38 +267,12 @@ public class WriteEssay extends AppCompatActivity {
 
     //连接服务器并发表
     @Background
-    public void publishEssay(String title ,String text,String tags){
-
-        try {
-            HttpURLConnection conn = null;
-            String url = getString(R.string.url)+"/t/add";
-            URL mURL = new URL(url);
-            conn = (HttpURLConnection) mURL.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setReadTimeout(5000);
-            conn.setConnectTimeout(10000);
-            conn.setDoOutput(true);
-            String data =  "u_id=" + MyFunction.getUserInfo().getId() + "&u_psw=" + MyFunction.getUserInfo().getPassword()+"&t_title="+title+"&t_text="+text+"&t_tags="+tags;
-            OutputStream out = conn.getOutputStream();
-            out.write(data.getBytes());
-            out.flush();
-            out.close();
-            int responseCode = conn.getResponseCode();// 调用此方法就不必再使用conn.connect()方
-            if (responseCode == 200) {
-                InputStream is = conn.getInputStream();
-                String state = getStringFromInputStream(is);
-                JSONObject jsonObject=new JSONObject(state);
-                if(jsonObject.getInt("code")==1){
-                    finishActivity();
-                }else {
-                    snackBar(jsonObject.getString("codeState")+MyFunction.getUserInfo().getPassword(),Snackbar.LENGTH_SHORT);
-                }
-            } else {
-                Log.i("TAG", "访问失败" + responseCode);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void publishEssay(String title, String text, String tags) {
+        String log = MyFunction.publishEssay(title, text, tags);
+        if (log == null)
+            finishActivity();
+        else
+            snackBar(log,Snackbar.LENGTH_SHORT);
     }
 
     //选择图片
@@ -314,7 +292,7 @@ public class WriteEssay extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.cancel();
                 getDate();
-                File file=new File(PATH,date);
+                File file = new File(PATH, date);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                 startActivityForResult(intent, TAKE_PHOTO);
@@ -341,7 +319,7 @@ public class WriteEssay extends AppCompatActivity {
             //这是从相机返回的数据
             case TAKE_PHOTO:
                 if (resultCode == WriteEssay.this.RESULT_OK) {
-                    File file=new File(PATH,date);
+                    File file = new File(PATH, date);
                     cropPhoto(Uri.fromFile(file));
                 }
                 break;
@@ -367,7 +345,7 @@ public class WriteEssay extends AppCompatActivity {
                 if (resultCode == WriteEssay.this.RESULT_OK) {
                     final String fileName = PATH + "/" + date;
                     File newFile = new File(Environment.getExternalStorageDirectory() + "/SybFrm", date);
-                    MyFunction.ImgCompress(fileName, newFile,00);
+                    MyFunction.ImgCompress(fileName, newFile, 00);
                     try {
                         if (!MyFunction.isIntenet(WriteEssay.this))
                             return;
@@ -418,7 +396,7 @@ public class WriteEssay extends AppCompatActivity {
             public void done(AVObject avObject, AVException e) {
                 // object 就是符合条件的第一个 AVObject
                 essayUrl = avObject.getAVFile("image").getUrl();
-                new File(PATH+"/"+date).delete();
+                new File(PATH + "/" + date).delete();
                 if (essayUrl != null)
                     setEssayUrl();
             }
@@ -430,7 +408,7 @@ public class WriteEssay extends AppCompatActivity {
 
         if (scrollView.getVisibility() == View.VISIBLE)
             scrollView.setVisibility(View.GONE);
-        else if(ll_tags.getVisibility()==View.VISIBLE)
+        else if (ll_tags.getVisibility() == View.VISIBLE)
             ll_tags.setVisibility(View.GONE);
 
         else {
